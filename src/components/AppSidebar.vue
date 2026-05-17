@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClock } from '@/composables/useClock'
 
 const { t } = useI18n()
 const { time } = useClock()
 const BASE = import.meta.env.BASE_URL
+
+const avatarLoaded = ref(false)
+const avatarSrc = `${BASE}assets/avatar.webp`
 
 const props = defineProps<{
   categories: { name: string; count: number }[]
@@ -21,19 +25,17 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
     <div class="flex flex-col gap-4">
       <!-- 个人卡片 -->
       <div class="glass-card text-center p-6">
-      <div
-          class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl overflow-hidden"
-          style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 4px 16px rgba(45,138,78,0.25);"
-        >
-          <img
-            :src="`${BASE}assets/avatar.webp`"
-            class="w-full h-full object-cover"
-            @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
-            onload="this.parentElement.style.background='none'"
-            alt=""
-          />
-          <span>N</span>
-        </div>
+      <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl overflow-hidden shadow-lg" :style="{ background: avatarLoaded ? 'transparent' : 'linear-gradient(135deg, #2d8a4e, #4caf50)', boxShadow: '0 4px 16px rgba(45,138,78,0.25)' }">
+        <img
+          :src="avatarSrc"
+          class="w-full h-full object-cover"
+          :class="{ hidden: !avatarLoaded }"
+          @load="avatarLoaded = true"
+          @error="avatarLoaded = false"
+          alt=""
+        />
+        <span :class="{ hidden: avatarLoaded }">N</span>
+      </div>
         <div class="font-bold text-base truncate px-1" style="color: var(--color-text);">{{ t('sidebar.name') }}</div>
         <div class="text-xs mt-0.5 truncate px-1" style="color: var(--color-text-muted);">{{ t('sidebar.handle') }}</div>
         <div class="text-xs mt-2.5 leading-relaxed px-1" style="color: var(--color-text-secondary);">

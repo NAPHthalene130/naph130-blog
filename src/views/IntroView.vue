@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePosts } from '@/composables/usePosts'
 import { useCategoryFilter } from '@/composables/useCategoryFilter'
@@ -9,6 +9,8 @@ const { t } = useI18n()
 const { posts, pinnedPosts } = usePosts()
 const { activeCategory } = useCategoryFilter()
 const BASE = import.meta.env.BASE_URL
+const avatarLoaded = ref(false)
+const avatarSrc = `${BASE}assets/avatar.webp`
 
 const filtered = computed<PostMeta[]>(() => {
   if (activeCategory.value === 'all') return posts.value
@@ -22,18 +24,16 @@ const filtered = computed<PostMeta[]>(() => {
   <div class="flex flex-col gap-8">
     <!-- 自我介绍 -->
     <div class="glass-card flex gap-8 items-center p-8 md:p-10">
-      <div
-        class="w-28 h-28 md:w-32 md:h-32 rounded-2xl shrink-0 flex items-center justify-center text-white text-5xl overflow-hidden"
-        style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 8px 28px rgba(45,138,78,0.2);"
-      >
+      <div class="w-28 h-28 md:w-32 md:h-32 rounded-2xl shrink-0 flex items-center justify-center text-white text-5xl overflow-hidden shadow-lg" :style="{ background: avatarLoaded ? 'transparent' : 'linear-gradient(135deg, #2d8a4e, #4caf50)', boxShadow: '0 8px 28px rgba(45,138,78,0.2)' }">
         <img
-          :src="`${BASE}assets/avatar.webp`"
+          :src="avatarSrc"
           class="w-full h-full object-cover"
-          @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
-          onload="this.parentElement.style.background='none'"
+          :class="{ hidden: !avatarLoaded }"
+          @load="avatarLoaded = true"
+          @error="avatarLoaded = false"
           alt=""
         />
-        <span>N</span>
+        <span :class="{ hidden: avatarLoaded }">N</span>
       </div>
       <div class="flex-1 min-w-0">
         <h1 class="text-2xl md:text-3xl font-bold mb-1 tracking-tight" style="color: var(--color-text);">
