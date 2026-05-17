@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赛博终端风 - 设计样板</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface-hover: #1a1a1a;
+  --text: #00ff41;
+  --text-dim: #00cc34;
+  --text-muted: #005500;
+  --accent: #ff6b6b;
+  --accent-blue: #00d4ff;
+  --accent-yellow: #ffd700;
+  --accent-purple: #bd93f9;
+  --border: #1a3a1a;
+  --glow: 0 0 10px rgba(0,255,65,0.15), 0 0 30px rgba(0,255,65,0.05);
+  --glow-strong: 0 0 15px rgba(0,255,65,0.3), 0 0 50px rgba(0,255,65,0.1);
+  --scanline: rgba(0,255,65,0.02);
+}
+[data-theme="light"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-hover: #1c2333;
+  --text: #00ff41;
+  --text-dim: #00cc34;
+  --text-muted: #005500;
+  --border: #1a3a1a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  position: relative;
+}
+/* CRT scanline effect */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scanline) 2px, var(--scanline) 4px);
+  pointer-events: none; z-index: 999;
+}
+a { color: var(--accent-blue); text-decoration: none; transition: text-shadow 0.2s; }
+a:hover { text-shadow: var(--glow); }
+
+/* Nav */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  box-shadow: var(--glow);
+}
+.nav-inner {
+  max-width: 1000px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; height: 52px;
+  padding: 0 2rem;
+}
+.nav-logo {
+  font-size: 1rem; font-weight: 500;
+  color: var(--accent-yellow);
+}
+.nav-logo::before { content: '> '; color: var(--text-dim); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a {
+  color: var(--text-dim); font-size: 0.85rem; position: relative;
+  padding: 0.25rem 0; transition: color 0.2s;
+}
+.nav-links a::before { content: '['; color: var(--text-muted); opacity: 0; transition: opacity 0.2s; }
+.nav-links a::after { content: ']'; color: var(--text-muted); opacity: 0; transition: opacity 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-links a:hover::before, .nav-links a.active::before,
+.nav-links a:hover::after, .nav-links a.active::after { opacity: 1; }
+.nav-actions { display: flex; gap: 1rem; }
+.nav-actions button {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-dim); padding: 0.25rem 0.75rem;
+  font-family: inherit; font-size: 0.75rem; cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-actions button:hover {
+  border-color: var(--text); color: var(--text);
+  box-shadow: var(--glow);
+}
+
+.container { max-width: 780px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+/* Terminal header */
+.term-header {
+  border: 1px solid var(--border); padding: 0.5rem 1rem; margin-bottom: 2rem;
+  background: var(--surface); display: flex; justify-content: space-between;
+  font-size: 0.75rem; color: var(--text-muted);
+}
+.term-header .dots { display: flex; gap: 0.4rem; }
+.term-header .dots span { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--border); }
+.term-header .dots span:nth-child(1) { background: var(--accent); border-color: var(--accent); }
+.term-header .dots span:nth-child(2) { background: var(--accent-yellow); border-color: var(--accent-yellow); }
+
+/* Search */
+.search-box {
+  width: 100%; padding: 0.6rem 1rem; margin-bottom: 2rem;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); font-family: inherit; font-size: 0.85rem; outline: none;
+}
+.search-box:focus { border-color: var(--text); box-shadow: var(--glow); }
+.search-box::placeholder { color: var(--text-muted); }
+
+/* Post Card */
+.post-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.post-card {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 1.5rem; transition: all 0.2s; position: relative; overflow: hidden;
+}
+.post-card:hover { box-shadow: var(--glow); border-color: var(--text-dim); }
+.post-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
+}
+.post-card.pinned { border-left: 2px solid var(--accent-yellow); }
+.post-title {
+  font-size: 1.05rem; font-weight: 500; color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.post-title::before { content: '## '; color: var(--text-muted); }
+.post-meta {
+  font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;
+  display: flex; gap: 1rem; flex-wrap: wrap;
+}
+.post-meta span { color: var(--text-dim); }
+.post-desc { color: var(--text-dim); font-size: 0.82rem; line-height: 1.8; margin-bottom: 0.75rem; }
+.post-tags { display: flex; gap: 0.5rem; }
+.post-tags span {
+  font-size: 0.7rem; padding: 0.1rem 0.5rem;
+  border: 1px solid var(--border); color: var(--accent-purple);
+}
+
+/* Article */
+.article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.article-title {
+  font-size: 1.6rem; font-weight: 500; color: var(--accent-yellow); margin-bottom: 0.75rem; line-height: 1.4;
+}
+.article-title::before { content: '# '; color: var(--text-muted); }
+.article-meta {
+  font-size: 0.78rem; color: var(--text-muted);
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+}
+.article-meta span::before { content: '@'; color: var(--text-muted); margin-right: 0.25rem; }
+
+/* TOC */
+.toc {
+  border: 1px solid var(--border); padding: 1.25rem; margin: 2rem 0;
+  background: var(--surface);
+}
+.toc h3 {
+  font-size: 0.8rem; color: var(--accent); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 0.75rem;
+}
+.toc h3::before { content: '📂 '; }
+.toc a { display: block; padding: 0.2rem 0; font-size: 0.82rem; color: var(--text-dim); transition: color 0.15s; }
+.toc a:hover { color: var(--text); }
+.toc a::before { content: '├─ '; color: var(--text-muted); }
+
+/* Prose */
+.prose { font-size: 0.9rem; }
+.prose h2 {
+  font-size: 1.25rem; font-weight: 500; color: var(--accent);
+  margin: 2.5rem 0 1rem; padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.prose h2::before { content: '## '; color: var(--text-muted); }
+.prose h3 {
+  font-size: 1.05rem; font-weight: 500; color: var(--text);
+  margin: 2rem 0 0.5rem;
+}
+.prose h3::before { content: '### '; color: var(--text-muted); }
+.prose p { margin: 1rem 0; color: var(--text-dim); }
+.prose strong { color: var(--text); }
+.prose code {
+  background: var(--surface-hover); padding: 0.1rem 0.35rem;
+  color: var(--accent); font-family: inherit; font-size: 0.9em;
+}
+.prose pre {
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 1rem 1.25rem; overflow-x: auto; margin: 1.5rem 0;
+}
+.prose pre code { background: none; padding: 0; color: var(--text-dim); }
+.prose blockquote {
+  border-left: 2px solid var(--accent); padding: 0.5rem 1rem;
+  margin: 1.5rem 0; color: var(--text-dim); font-style: italic;
+}
+.prose ul, .prose ol { margin: 1rem 0; padding-left: 1.5rem; color: var(--text-dim); }
+.prose li::marker { color: var(--text-muted); }
+.prose hr { border: none; border-top: 1px dashed var(--border); margin: 2.5rem 0; }
+
+/* Post Nav */
+.post-nav {
+  display: flex; justify-content: space-between; margin-top: 3rem;
+  padding-top: 1.5rem; border-top: 1px solid var(--border);
+}
+.post-nav a { font-size: 0.82rem; }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 3rem 2rem; color: var(--text-muted);
+  font-size: 0.78rem; border-top: 1px solid var(--border); margin-top: 4rem;
+}
+.footer::before { content: '[EOF]'; display: block; margin-bottom: 1rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">naph130.blog</a>
+    <div class="nav-links">
+      <a href="#" class="active">intro</a>
+      <a href="#">posts</a>
+      <a href="#">about</a>
+    </div>
+    <div class="nav-actions">
+      <button onclick="toggleTheme()">theme</button>
+      <button>lang</button>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="term-header">
+    <span class="dots"><span></span><span></span><span></span></span>
+    <span>blog@naph130 ~/posts</span>
+  </div>
+
+  <input class="search-box" type="text" placeholder=" $ grep -i ..." />
+
+  <div class="post-list">
+    <article class="post-card pinned">
+      <h3 class="post-title">理解 Vue 3 组合式 API 的设计思想</h3>
+      <div class="post-meta"><span>2024-06-15</span><span>8 min read</span><span>2,400 words</span></div>
+      <p class="post-desc">深入探讨 Vue 3 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变及最佳实践。</p>
+      <div class="post-tags"><span>vue</span><span>typescript</span><span>architecture</span></div>
+    </article>
+
+    <article class="post-card">
+      <h3 class="post-title">从零搭建 TypeScript 全栈项目</h3>
+      <div class="post-meta"><span>2024-03-20</span><span>12 min read</span></div>
+      <p class="post-desc">记录一次完整 TypeScript 全栈项目搭建过程，涵盖 monorepo、共享类型等工程化实践。</p>
+      <div class="post-tags"><span>typescript</span><span>nodejs</span></div>
+    </article>
+
+    <article class="post-card">
+      <h3 class="post-title">CSS Container Queries 实战指南</h3>
+      <div class="post-meta"><span>2024-01-08</span><span>6 min read</span></div>
+      <p class="post-desc">Container Queries 终于在所有主流浏览器中得到支持，本文用实际案例演示用法。</p>
+      <div class="post-tags"><span>css</span></div>
+    </article>
+  </div>
+
+  <hr style="margin:3rem 0; border-color:var(--border);" />
+
+  <!-- Article -->
+  <article>
+    <header class="article-header">
+      <h1 class="article-title">理解 Vue 3 组合式 API 的设计思想</h1>
+      <div class="article-meta">
+        <span>2024-06-15</span>
+        <span>8 min read</span>
+        <span>2400 words</span>
+        <span>tags: vue, typescript</span>
+      </div>
+    </header>
+
+    <nav class="toc">
+      <h3>TABLE OF CONTENTS</h3>
+      <a href="#">设计背景</a>
+      <a href="#">Options API 的局限</a>
+      <a href="#">核心概念</a>
+      <a href="#">实际应用</a>
+      <a href="#">总结</a>
+    </nav>
+
+    <div class="prose">
+      <p>Vue 3 的 Composition API 并非凭空出现，它是对 Vue 2 <code>Options API</code> 在使用中暴露出的痛点的一次系统性回应。</p>
+
+      <h2>设计背景</h2>
+      <p>在 Vue 2 时代，我们按照 <strong>data</strong>、<strong>methods</strong>、<strong>computed</strong> 等选项来组织组件逻辑。这种方式在小规模组件中清晰直观，但随着组件规模的增长，问题逐渐显现。</p>
+
+      <blockquote><p>"组合式 API 不是要取代 Options API，而是提供了一种更灵活的代码组织方式。"</p></blockquote>
+
+      <pre>// Vue 3 Composition API
+const query = ref('')
+const results = ref([])
+watch(query, async (val) => {
+  results.value = await fetchResults(val)
+})</pre>
+
+      <h2>核心概念</h2>
+      <p>Composition API 的核心思想是<strong>按逻辑关注点组织代码</strong>，而非按选项类型。</p>
+      <ul>
+        <li>useSearch — 搜索逻辑封装</li>
+        <li>usePagination — 分页逻辑封装</li>
+        <li>useTheme — 主题切换封装</li>
+      </ul>
+
+      <h2>总结</h2>
+      <p>Composition API 带给我们的不仅是语法上的变化，更是思维方式上的转变。它鼓励我们将逻辑视为一等公民。</p>
+    </div>
+
+    <nav class="post-nav">
+      <a href="#">← prev: TypeScript 全栈项目</a>
+      <a href="#">next: CSS Container Queries →</a>
+    </nav>
+  </article>
+</main>
+
+<footer class="footer">
+  <p>NAPH130 Blog · Powered by Vue 3 & Vite · Deployed on GitHub Pages</p>
+</footer>
+
+<script>
+function toggleTheme(){var t=document.documentElement;t.dataset.theme=t.dataset.theme==='dark'?'light':'dark';}
+</script>
+</body>
+</html>

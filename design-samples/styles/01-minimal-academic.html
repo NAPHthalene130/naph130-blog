@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极简学术风 - 设计样板</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #6b7280;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --border: #e5e7eb;
+  --code-bg: #f3f4f6;
+  --tag-bg: #eff6ff;
+  --tag-text: #3b82f6;
+  --divider: #e5e7eb;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --card: #161b22;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --border: #30363d;
+  --code-bg: #161b22;
+  --tag-bg: #1f2937;
+  --tag-text: #93c5fd;
+  --divider: #30363d;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  transition: background 0.3s, color 0.3s;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Navigation */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; height: 56px;
+}
+.nav-logo { font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 1.25rem; color: var(--text); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a {
+  color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;
+  transition: color 0.2s; padding: 0.25rem 0; border-bottom: 2px solid transparent;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--text); border-bottom-color: var(--accent); text-decoration: none; }
+.nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+.nav-actions button {
+  background: none; border: 1px solid var(--border); color: var(--text-secondary);
+  padding: 0.35rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+  font-family: inherit; transition: all 0.2s;
+}
+.nav-actions button:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Layout */
+.container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+
+/* Post Card */
+.post-list { display: flex; flex-direction: column; gap: 2rem; }
+.post-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 2rem; transition: box-shadow 0.2s;
+}
+.post-card:hover { box-shadow: var(--shadow); }
+.post-card.pinned { border-left: 3px solid var(--accent); }
+.post-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.35rem; font-weight: 600;
+  color: var(--text); margin-bottom: 0.5rem; line-height: 1.4;
+}
+.post-meta {
+  display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+  font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;
+}
+.post-meta .pinned-badge {
+  background: var(--tag-bg); color: var(--tag-text);
+  padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;
+}
+.post-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1rem; }
+.post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.post-tags span {
+  font-size: 0.75rem; padding: 0.15rem 0.6rem; border-radius: 4px;
+  background: var(--tag-bg); color: var(--tag-text);
+}
+
+/* Post Detail */
+.article-header { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--divider); }
+.article-title {
+  font-family: 'Noto Serif SC', serif; font-size: 2.25rem; font-weight: 700;
+  color: var(--text); line-height: 1.3; margin-bottom: 1rem;
+}
+.article-meta { display: flex; gap: 1rem; color: var(--text-secondary); font-size: 0.9rem; flex-wrap: wrap; }
+.prose { line-height: 1.85; }
+.prose h2 {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 600;
+  color: var(--text); margin: 2.5rem 0 0.75rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.prose h3 {
+  font-family: 'Noto Serif SC', serif; font-size: 1.2rem; font-weight: 600;
+  color: var(--text); margin: 2rem 0 0.5rem;
+}
+.prose p { margin: 1rem 0; color: var(--text); }
+.prose code {
+  background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--accent);
+}
+.prose pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin: 1.5rem 0;
+}
+.prose pre code { background: none; padding: 0; color: var(--text); }
+.prose blockquote {
+  border-left: 3px solid var(--accent); padding: 0.5rem 1rem;
+  margin: 1.5rem 0; color: var(--text-secondary); font-style: italic;
+}
+.prose ul, .prose ol { margin: 1rem 0; padding-left: 1.5rem; }
+.prose li { margin: 0.35rem 0; }
+.prose hr { border: none; border-top: 1px solid var(--divider); margin: 2.5rem 0; }
+.prose table { width:100%; border-collapse:collapse; margin:1.5rem 0; }
+.prose th, .prose td { border:1px solid var(--border); padding:0.5rem 0.75rem; text-align:left; }
+.prose th { background:var(--code-bg); font-weight:600; }
+.prose img { max-width:100%; border-radius:8px; margin:1.5rem 0; }
+
+/* TOC */
+.toc { border-left: 2px solid var(--border); padding-left: 1rem; margin: 2rem 0; }
+.toc h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.75rem; }
+.toc a { display: block; padding: 0.2rem 0; font-size: 0.88rem; color: var(--text-secondary); transition: color 0.15s; }
+.toc a:hover { color: var(--accent); text-decoration: none; }
+
+/* Search */
+.search-box {
+  width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--card); color: var(--text);
+  font-family: inherit; font-size: 0.95rem; margin-bottom: 2rem; outline: none;
+}
+.search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+/* Footer */
+.footer { text-align: center; padding: 3rem 2rem; color: var(--text-secondary); font-size: 0.85rem; border-top: 1px solid var(--border); }
+
+/* Theme toggle */
+.theme-toggle { cursor: pointer; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">NAPH130 Blog</a>
+    <div class="nav-links">
+      <a href="#" class="active">介绍</a>
+      <a href="#">文章</a>
+      <a href="#">关于</a>
+    </div>
+    <div class="nav-actions">
+      <button onclick="toggleTheme()" class="theme-toggle">☀️ 浅色</button>
+      <button>中</button>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <!-- 文章列表页 -->
+  <h2 style="font-family:'Noto Serif SC',serif; font-size:1.75rem; font-weight:700; margin-bottom:1.5rem;">文章</h2>
+  <input class="search-box" type="text" placeholder="搜索文章..." />
+
+  <div class="post-list">
+    <article class="post-card pinned">
+      <h3 class="post-title">📌 理解 Vue 3 组合式 API 的设计思想</h3>
+      <div class="post-meta">
+        <span>2024-06-15</span>
+        <span>约 8 分钟</span>
+        <span>2,400 字</span>
+        <span class="pinned-badge">置顶</span>
+      </div>
+      <p class="post-desc">深入探讨 Vue 3 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变，以及在实际项目中的最佳实践。</p>
+      <div class="post-tags"><span>Vue</span><span>TypeScript</span><span>前端架构</span></div>
+    </article>
+
+    <article class="post-card">
+      <h3 class="post-title">从零搭建 TypeScript 全栈项目</h3>
+      <div class="post-meta"><span>2024-03-20</span><span>约 12 分钟</span><span>3,600 字</span></div>
+      <p class="post-desc">记录一次完整的 TypeScript 全栈项目搭建过程，涵盖 monorepo、共享类型、代码生成等工程化实践。</p>
+      <div class="post-tags"><span>TypeScript</span><span>Node.js</span><span>工程化</span></div>
+    </article>
+
+    <article class="post-card">
+      <h3 class="post-title">CSS Container Queries 实战指南</h3>
+      <div class="post-meta"><span>2024-01-08</span><span>约 6 分钟</span><span>1,800 字</span></div>
+      <p class="post-desc">Container Queries 终于在所有主流浏览器中得到支持，本文通过实际案例演示如何用它替代复杂的 Media Queries。</p>
+      <div class="post-tags"><span>CSS</span><span>响应式设计</span></div>
+    </article>
+  </div>
+
+  <hr style="margin:4rem 0 2rem; border-color:var(--border);" />
+
+  <!-- 文章详情页 -->
+  <article>
+    <header class="article-header">
+      <h1 class="article-title">理解 Vue 3 组合式 API 的设计思想</h1>
+      <div class="article-meta">
+        <span>📅 2024-06-15</span>
+        <span>🕐 约 8 分钟</span>
+        <span>📝 2,400 字</span>
+      </div>
+    </header>
+
+    <nav class="toc">
+      <h3>目录</h3>
+      <a href="#">设计背景</a>
+      <a href="#" style="padding-left:1rem;">Options API 的局限</a>
+      <a href="#">核心概念</a>
+      <a href="#" style="padding-left:1rem;">setup 函数</a>
+      <a href="#" style="padding-left:1rem;">响应式 API</a>
+      <a href="#">实际应用</a>
+      <a href="#">总结</a>
+    </nav>
+
+    <div class="prose">
+      <p>Vue 3 的 Composition API 并非凭空出现，它是对 Vue 2 Options API 在使用中暴露出的痛点的一次系统性回应。理解这些设计背景，才能真正用好组合式 API。</p>
+
+      <h2>设计背景</h2>
+      <p>在 Vue 2 时代，我们按照 <code>data</code>、<code>methods</code>、<code>computed</code> 等选项来组织组件逻辑。这种方式在小规模组件中清晰直观，但随着组件规模的增长，问题逐渐显现。</p>
+
+      <h3>Options API 的局限</h3>
+      <p>当一个组件的逻辑涉及多个数据源和交互时，相关逻辑被迫分散在不同的选项中。例如，一个搜索功能可能涉及 <code>data</code> 中的搜索关键词、<code>computed</code> 中的过滤结果、<code>methods</code> 中的搜索处理函数、<code>watch</code> 中的 URL 同步逻辑。这些代码在物理上被选项强行隔开。</p>
+
+      <pre><code>// Vue 2 Options API
+export default {
+  data() {
+    return {
+      query: '',
+      results: [],
+      loading: false
+    }
+  },
+  watch: {
+    query: 'debouncedSearch'
+  },
+  methods: {
+    async debouncedSearch() {
+      this.loading = true
+      this.results = await fetchResults(this.query)
+      this.loading = false
+    }
+  }
+}</code></pre>
+
+      <h2>核心概念</h2>
+      <p>Composition API 的核心思想是<strong>按逻辑关注点组织代码</strong>，而非按选项类型。相关的状态、计算属性、方法、监听器可以放在一起，形成内聚的逻辑块。</p>
+
+      <blockquote>
+        <p>"组合式 API 不是要取代 Options API，而是提供了一种更灵活的代码组织方式。两者可以共存。"</p>
+      </blockquote>
+
+      <pre><code>// Vue 3 Composition API
+const query = ref('')
+const results = ref([])
+const loading = ref(false)
+
+watch(query, async (val) => {
+  loading.value = true
+  results.value = await fetchResults(val)
+  loading.value = false
+})</code></pre>
+
+      <h2>实际应用</h2>
+      <p>在实际项目中，Composition API 最大的价值在于逻辑复用。通过自定义组合函数（composables），我们可以将可复用的逻辑封装成独立函数：</p>
+      <ul>
+        <li><strong>useSearch</strong> — 搜索逻辑封装</li>
+        <li><strong>usePagination</strong> — 分页逻辑封装</li>
+        <li><strong>useTheme</strong> — 主题切换封装</li>
+        <li><strong>useFetch</strong> — 数据请求封装</li>
+      </ul>
+
+      <h2>总结</h2>
+      <p>Composition API 带给我们的不仅是语法上的变化，更是思维方式上的转变。它鼓励我们将逻辑视为一等公民，让代码组织从"按类型分"走向"按功能聚"。这种编程模型与 React Hooks 殊途同归，代表了前端框架设计的一个共识方向。</p>
+    </div>
+
+    <nav style="display:flex; justify-content:space-between; margin-top:3rem; padding-top:2rem; border-top:1px solid var(--divider);">
+      <a href="#" style="opacity:0.6;">← 从零搭建 TypeScript 全栈项目</a>
+      <a href="#">CSS Container Queries 实战指南 →</a>
+    </nav>
+  </article>
+</main>
+
+<footer class="footer">
+  <p>NAPH130 Blog · Powered by Vue 3 & Vite</p>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  if (html.dataset.theme === 'light') {
+    html.dataset.theme = 'dark';
+    btn.textContent = '🌙 暗色';
+  } else {
+    html.dataset.theme = 'light';
+    btn.textContent = '☀️ 浅色';
+  }
+}
+</script>
+</body>
+</html>

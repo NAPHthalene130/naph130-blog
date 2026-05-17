@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>侧边栏导航布局 - 排版样板</title>
+<style>
+:root {
+  --bg: #f8f9fa; --sidebar-bg: #ffffff; --text: #212529;
+  --text-secondary: #6c757d; --accent: #0d6efd; --border: #dee2e6;
+  --sidebar-width: 260px;
+}
+[data-theme="dark"] {
+  --bg: #1a1d23; --sidebar-bg: #212529; --text: #e9ecef;
+  --text-secondary: #adb5bd; --accent: #5c9aff; --border: #343a40;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;
+  display:flex;min-height:100vh;
+}
+
+/* ── Persistent Sidebar ── */
+.sidebar{
+  width:var(--sidebar-width);min-height:100vh;
+  background:var(--sidebar-bg);border-right:1px solid var(--border);
+  position:fixed;top:0;left:0;bottom:0;z-index:40;
+  display:flex;flex-direction:column;padding:2rem 1.5rem;
+  overflow-y:auto;
+}
+.sidebar-logo{
+  font-size:1.2rem;font-weight:800;letter-spacing:-0.02em;
+  margin-bottom:2.5rem;display:flex;align-items:center;gap:0.5rem;
+  text-decoration:none;color:var(--text);
+}
+.sidebar-logo .dot{width:8px;height:8px;background:var(--accent);border-radius:50%;}
+.sidebar-nav{display:flex;flex-direction:column;gap:0.25rem;flex:1;}
+.sidebar-nav a{
+  padding:0.6rem 0.75rem;border-radius:6px;color:var(--text-secondary);
+  text-decoration:none;font-size:0.88rem;font-weight:500;transition:all 0.15s;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.sidebar-nav a:hover{background:rgba(13,110,253,0.06);color:var(--text);}
+.sidebar-nav a.active{background:var(--accent);color:#fff;}
+.sidebar-nav a .icon{font-size:1.1rem;width:20px;text-align:center;}
+.sidebar-nav .section{
+  font-size:0.65rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--text-secondary);padding:1.5rem 0.75rem 0.5rem;
+}
+.sidebar-footer{
+  margin-top:auto;padding-top:1.5rem;border-top:1px solid var(--border);
+  font-size:0.75rem;color:var(--text-secondary);
+  display:flex;flex-direction:column;gap:0.5rem;
+}
+.sidebar-footer button{
+  padding:0.5rem 0.75rem;border:1px solid var(--border);background:none;
+  color:var(--text-secondary);border-radius:6px;cursor:pointer;
+  font-family:inherit;font-size:0.75rem;transition:all 0.15s;
+}
+.sidebar-footer button:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── Main Content Area ── */
+.main-area{
+  margin-left:var(--sidebar-width);
+  flex:1;min-width:0;
+  display:flex;flex-direction:column;
+}
+
+/* Top bar */
+.topbar{
+  background:var(--sidebar-bg);border-bottom:1px solid var(--border);
+  padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:30;
+}
+.topbar .breadcrumb{font-size:0.82rem;color:var(--text-secondary);}
+.topbar .breadcrumb a{color:var(--text-secondary);text-decoration:none;}
+.topbar .breadcrumb a:hover{color:var(--text);}
+.topbar .breadcrumb span{color:var(--text);}
+.topbar-actions{display:flex;gap:0.5rem;align-items:center;}
+
+/* Content */
+.content{padding:2.5rem;max-width:900px;}
+@media(min-width:1400px){
+  .content{display:grid;grid-template-columns:1fr 240px;gap:3rem;max-width:1200px;}
+}
+
+/* ── Post Cards ── */
+.post-list{display:flex;flex-direction:column;gap:1.25rem;}
+.post-card{
+  background:var(--sidebar-bg);border:1px solid var(--border);
+  border-radius:8px;padding:1.5rem;transition:box-shadow 0.2s;
+}
+.post-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.post-title{font-size:1.1rem;font-weight:600;margin-bottom:0.35rem;}
+.post-title a{color:var(--text);text-decoration:none;}
+.post-title a:hover{color:var(--accent);}
+.post-meta{font-size:0.78rem;color:var(--text-secondary);margin-bottom:0.5rem;}
+.post-desc{font-size:0.88rem;color:var(--text-secondary);line-height:1.65;}
+
+/* Search */
+.search-box{
+  width:100%;padding:0.7rem 1rem;border:1px solid var(--border);
+  border-radius:8px;background:var(--sidebar-bg);color:var(--text);
+  font-family:inherit;font-size:0.9rem;margin-bottom:1.5rem;outline:none;
+}
+.search-box:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(13,110,253,0.1);}
+
+/* Article */
+.article-header{margin-bottom:2.5rem;}
+.article-header h1{font-size:2rem;font-weight:800;line-height:1.25;margin-bottom:0.75rem;letter-spacing:-0.02em;}
+.article-header .meta{font-size:0.85rem;color:var(--text-secondary);}
+.article-header .meta span{margin-right:1.5rem;}
+
+.prose{font-size:1.02rem;line-height:1.85;}
+.prose h2{font-size:1.4rem;font-weight:700;margin:2.5rem 0 0.75rem;}
+.prose h3{font-size:1.15rem;font-weight:700;margin:2rem 0 0.5rem;}
+.prose p{margin:1rem 0;color:#444;}
+[data-theme="dark"] .prose p{color:#ccc;}
+.prose code{background:rgba(13,110,253,0.08);color:var(--accent);padding:0.12rem 0.4rem;border-radius:4px;font-size:0.88em;}
+.prose pre{background:var(--bg);border:1px solid var(--border);padding:1rem 1.25rem;border-radius:8px;overflow-x:auto;margin:1.25rem 0;font-size:0.85rem;line-height:1.7;}
+.prose blockquote{border-left:3px solid var(--accent);padding:0.25rem 1rem;margin:1.25rem 0;color:var(--text-secondary);}
+.prose ul,.prose ol{margin:1rem 0;padding-left:1.5rem;}
+.prose li{margin:0.3rem 0;}
+
+/* TOC sidebar */
+.toc-sidebar{position:sticky;top:80px;}
+.toc-sidebar h3{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin-bottom:0.75rem;}
+.toc-sidebar a{display:block;padding:0.3rem 0;font-size:0.82rem;color:var(--text-secondary);text-decoration:none;border-left:2px solid transparent;padding-left:0.75rem;transition:all 0.15s;}
+.toc-sidebar a:hover,.toc-sidebar a.active{color:var(--text);border-left-color:var(--accent);}
+
+/* Post nav */
+.post-nav{display:flex;justify-content:space-between;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.post-nav a{color:var(--text-secondary);text-decoration:none;font-size:0.88rem;max-width:45%;}
+.post-nav a:hover{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<!-- Persistent Sidebar -->
+<aside class="sidebar">
+  <a href="#" class="sidebar-logo"><span class="dot"></span>NAPH130</a>
+
+  <nav class="sidebar-nav">
+    <div class="section">导航</div>
+    <a href="#" class="active"><span class="icon">🏠</span>介绍</a>
+    <a href="#"><span class="icon">📝</span>文章</a>
+    <a href="#"><span class="icon">👤</span>关于</a>
+
+    <div class="section">分类</div>
+    <a href="#">Vue</a>
+    <a href="#">TypeScript</a>
+    <a href="#">CSS</a>
+    <a href="#">工程化</a>
+
+    <div class="section">其他</div>
+    <a href="#">RSS 订阅</a>
+    <a href="#">GitHub</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button onclick="toggleTheme()">切换暗色模式</button>
+    <span>© 2024 NAPH130</span>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<div class="main-area">
+  <div class="topbar">
+    <div class="breadcrumb"><a href="#">首页</a> / <span>文章</span></div>
+    <div class="topbar-actions">
+      <button style="padding:0.3rem 0.75rem;border:1px solid var(--border);background:none;border-radius:6px;cursor:pointer;color:var(--text-secondary);font-size:0.8rem;">EN</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div>
+      <!-- 列表页 -->
+      <input class="search-box" type="text" placeholder="搜索文章..." />
+
+      <div class="post-list">
+        <article class="post-card">
+          <h3 class="post-title"><a href="#">理解 Vue 3 组合式 API 的设计思想</a></h3>
+          <div class="post-meta">2024-06-15 · 8 分钟 · 2,400 字</div>
+          <p class="post-desc">深入探讨 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变，及实际最佳实践。</p>
+        </article>
+        <article class="post-card">
+          <h3 class="post-title"><a href="#">从零搭建 TypeScript 全栈项目</a></h3>
+          <div class="post-meta">2024-03-20 · 12 分钟 · 3,600 字</div>
+          <p class="post-desc">记录一次完整的 TypeScript 全栈项目搭建过程，涵盖 monorepo、共享类型等工程化实践。</p>
+        </article>
+        <article class="post-card">
+          <h3 class="post-title"><a href="#">CSS Container Queries 实战指南</a></h3>
+          <div class="post-meta">2024-01-08 · 6 分钟 · 1,800 字</div>
+          <p class="post-desc">Container Queries 终于在所有主流浏览器中得到支持，本文通过实际案例演示用法。</p>
+        </article>
+      </div>
+
+      <hr style="margin:3rem 0;border-color:var(--border);" />
+
+      <!-- 文章详情页 -->
+      <article>
+        <header class="article-header">
+          <h1>理解 Vue 3 组合式 API 的设计思想</h1>
+          <div class="meta">
+            <span>📅 2024-06-15</span><span>🕐 8 分钟</span><span>📝 2,400 字</span>
+          </div>
+        </header>
+
+        <div class="prose">
+          <p>Vue 3 的 Composition API 并非凭空出现，它是对 Vue 2 Options API 在使用中暴露出的痛点的一次系统性回应。</p>
+
+          <h2>设计背景</h2>
+          <p>在 Vue 2 时代，我们按照 <code>data</code>、<code>methods</code>、<code>computed</code> 等选项来组织组件逻辑。这种方式在小规模组件中清晰直观，但随着组件规模的增长，问题逐渐显现。</p>
+
+          <blockquote><p>组合式 API 不是要取代 Options API，而是提供了一种更灵活的代码组织方式。</p></blockquote>
+
+          <pre>// Vue 3 Composition API
+const query = ref('')
+const results = ref([])
+watch(query, async (val) => {
+  results.value = await fetchResults(val)
+})</pre>
+
+          <h2>核心概念</h2>
+          <p>Composition API 的核心思想是<strong>按逻辑关注点组织代码</strong>，而非按选项类型。相关的状态、计算属性、方法、监听器可以放在一起。</p>
+          <ul>
+            <li>useSearch — 搜索逻辑封装</li>
+            <li>usePagination — 分页逻辑封装</li>
+            <li>useTheme — 主题切换封装</li>
+          </ul>
+        </div>
+
+        <nav class="post-nav">
+          <a href="#">← 搭建 TypeScript 全栈项目</a>
+          <a href="#">CSS Container Queries 指南 →</a>
+        </nav>
+      </article>
+    </div>
+
+    <!-- TOC (visible on wide screens) -->
+    <aside class="toc-sidebar" style="display:none;">
+      <h3>本页目录</h3>
+      <a href="#" class="active">设计背景</a>
+      <a href="#">核心概念</a>
+      <a href="#">实际应用</a>
+      <a href="#">总结</a>
+    </aside>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){
+  var t=document.documentElement;t.dataset.theme=t.dataset.theme==='light'?'dark':'light';
+}
+if(window.innerWidth>=1400){document.querySelector('.toc-sidebar').style.display='block';}
+</script>
+</body>
+</html>
