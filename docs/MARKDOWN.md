@@ -35,6 +35,7 @@ title: string           # 文章标题 (必填)
 date: YYYY-MM-DD        # 发布日期 (必填)
 updated: YYYY-MM-DD     # 更新日期 (可选)
 description: string     # 摘要描述 (必填)
+category: string        # 类别 (可选, 如"前端""后端""工程化")
 tags:                   # 标签数组 (可选)
   - Vue
   - TypeScript
@@ -44,6 +45,8 @@ draft: boolean          # 草稿 (可选, 默认 false, 草稿不显示)
 ---
 ```
 
+> **类别 vs 标签**：`category` 是单一分类（一篇文章属于一个类别），用于侧栏筛选。`tags` 是多个标签（一篇文章可有多个标签），用于精细标注和搜索。
+
 ### 完整示例
 
 ```yaml
@@ -51,6 +54,7 @@ draft: boolean          # 草稿 (可选, 默认 false, 草稿不显示)
 title: 使用 Vue 3 构建静态博客
 date: 2024-06-15
 updated: 2024-08-20
+category: 前端
 description: 从零搭建一个纯客户端渲染的静态博客，使用 Markdown 管理内容
 tags:
   - Vue
