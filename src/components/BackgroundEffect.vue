@@ -22,39 +22,39 @@ onMounted(() => {
     const dark = document.documentElement.classList.contains('dark')
 
     if (dark) {
-      // 暗色：深绿底自由流动
-      c.fillStyle = `hsl(${140 + Math.sin(elapsed*0.6)*12}, 30%, ${10 + Math.sin(elapsed*0.4)*3}%)`
+      c.fillStyle = `hsl(${145 + Math.sin(elapsed*0.8)*20}, 35%, ${8 + Math.sin(elapsed*0.5)*4}%)`
       c.fillRect(0, 0, w, h)
 
       const orbs = [
-        { x: w*0.25 + Math.sin(elapsed*0.5)*100, y: h*0.2 + Math.cos(elapsed*0.4)*75,  r: Math.min(w,h)*0.40, h: 140 + Math.sin(elapsed*0.6)*18, s: 35, l: 18 },
-        { x: w*0.75 + Math.cos(elapsed*0.55)*90, y: h*0.15 + Math.sin(elapsed*0.6)*65, r: Math.min(w,h)*0.36, h: 120 + Math.cos(elapsed*0.5)*15,  s: 30, l: 16 },
-        { x: w*0.55 + Math.sin(elapsed*0.4)*110, y: h*0.72 + Math.cos(elapsed*0.5)*80, r: Math.min(w,h)*0.38, h: 160 + Math.sin(elapsed*0.55)*14, s: 32, l: 20 },
-        { x: w*0.35 + Math.cos(elapsed*0.45)*80, y: h*0.55 + Math.sin(elapsed*0.5)*60, r: Math.min(w,h)*0.32, h: 135 + Math.cos(elapsed*0.65)*20, s: 28, l: 15 },
+        { x: w*0.25 + Math.sin(elapsed*0.55)*180, y: h*0.25 + Math.cos(elapsed*0.45)*140,  r: Math.min(w,h)*0.50, h: 140 + Math.sin(elapsed*0.6)*25,  s: 50, l: 22 },
+        { x: w*0.75 + Math.cos(elapsed*0.6)*160,  y: h*0.15 + Math.sin(elapsed*0.65)*120, r: Math.min(w,h)*0.45, h: 115 + Math.cos(elapsed*0.55)*22, s: 45, l: 20 },
+        { x: w*0.50 + Math.sin(elapsed*0.45)*200, y: h*0.70 + Math.cos(elapsed*0.55)*150, r: Math.min(w,h)*0.48, h: 165 + Math.sin(elapsed*0.5)*20,  s: 48, l: 24 },
+        { x: w*0.35 + Math.cos(elapsed*0.5)*170,  y: h*0.50 + Math.sin(elapsed*0.5)*130,  r: Math.min(w,h)*0.40, h: 130 + Math.cos(elapsed*0.7)*28,  s: 42, l: 18 },
       ]
       for (const o of orbs) {
         const g = c.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r)
-        g.addColorStop(0, `hsla(${o.h},${o.s}%,${o.l+12}%,0.22)`)
-        g.addColorStop(0.5, `hsla(${o.h},${o.s}%,${o.l}%,0.1)`)
+        g.addColorStop(0, `hsla(${o.h},${o.s}%,${o.l+18}%,0.35)`)
+        g.addColorStop(0.4, `hsla(${o.h},${o.s}%,${o.l}%,0.18)`)
         g.addColorStop(1, 'transparent')
         c.fillStyle = g; c.fillRect(0, 0, w, h)
       }
     } else {
-      // 浅色：浅淡 → 浅绿 大范围流动
-      const baseHue = 90 + Math.sin(elapsed * 0.5) * 40 // 50° ~ 130° : 黄绿 → 翠绿
-      c.fillStyle = `hsl(${baseHue + 10}, 35%, ${92 + Math.sin(elapsed*0.35)*5}%)`
+      // 浅色：大范围 浅淡白↔嫩绿↔翠绿
+      const baseHue = 70 + Math.sin(elapsed * 0.5) * 50  // 20°~120°: 黄→草绿
+      c.fillStyle = `hsl(${baseHue + 15}, 40%, ${90 + Math.sin(elapsed*0.4)*5}%)`
       c.fillRect(0, 0, w, h)
 
       const orbs = [
-        { x: w*0.2  + Math.sin(elapsed*0.5)*120, y: h*0.2 + Math.cos(elapsed*0.4)*90,  r: Math.min(w,h)*0.42, h: baseHue + Math.sin(elapsed*0.6)*20,  s: 40, l: 80 },
-        { x: w*0.78 + Math.cos(elapsed*0.55)*100, y: h*0.12 + Math.sin(elapsed*0.6)*80, r: Math.min(w,h)*0.38, h: baseHue + 20 + Math.cos(elapsed*0.55)*18, s: 35, l: 78 },
-        { x: w*0.52 + Math.sin(elapsed*0.45)*130, y: h*0.7 + Math.cos(elapsed*0.5)*95,  r: Math.min(w,h)*0.40, h: baseHue + 40 + Math.sin(elapsed*0.5)*15,  s: 38, l: 76 },
-        { x: w*0.35 + Math.cos(elapsed*0.5)*90,  y: h*0.5 + Math.sin(elapsed*0.55)*70, r: Math.min(w,h)*0.34, h: baseHue - 5 + Math.cos(elapsed*0.7)*25,  s: 42, l: 82 },
+        { x: w*0.18 + Math.sin(elapsed*0.5)*180,  y: h*0.22 + Math.cos(elapsed*0.45)*150,  r: Math.min(w,h)*0.55, h: baseHue + Math.sin(elapsed*0.55)*30,  s: 55, l: 82 },
+        { x: w*0.80 + Math.cos(elapsed*0.55)*160, y: h*0.12 + Math.sin(elapsed*0.6)*130,   r: Math.min(w,h)*0.48, h: baseHue + 25 + Math.cos(elapsed*0.5)*25,  s: 50, l: 78 },
+        { x: w*0.50 + Math.sin(elapsed*0.4)*210,  y: h*0.72 + Math.cos(elapsed*0.55)*170,  r: Math.min(w,h)*0.52, h: baseHue + 50 + Math.sin(elapsed*0.45)*28, s: 55, l: 76 },
+        { x: w*0.32 + Math.cos(elapsed*0.5)*170,  y: h*0.48 + Math.sin(elapsed*0.5)*140,   r: Math.min(w,h)*0.44, h: baseHue - 10 + Math.cos(elapsed*0.65)*35, s: 58, l: 84 },
+        { x: w*0.65 + Math.sin(elapsed*0.6)*140,  y: h*0.40 + Math.cos(elapsed*0.7)*110,   r: Math.min(w,h)*0.38, h: baseHue + 35 + Math.sin(elapsed*0.7)*20,  s: 48, l: 80 },
       ]
       for (const o of orbs) {
         const g = c.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r)
-        g.addColorStop(0, `hsla(${o.h},${o.s}%,${o.l - 12}%,0.28)`)
-        g.addColorStop(0.5, `hsla(${o.h},${o.s}%,${o.l}%,0.12)`)
+        g.addColorStop(0, `hsla(${o.h},${o.s}%,${o.l - 18}%,0.35)`)
+        g.addColorStop(0.4, `hsla(${o.h},${o.s}%,${o.l}%,0.18)`)
         g.addColorStop(1, 'transparent')
         c.fillStyle = g; c.fillRect(0, 0, w, h)
       }
