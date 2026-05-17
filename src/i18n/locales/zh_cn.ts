@@ -10,8 +10,8 @@ export default {
     reading: '阅读',
     name: 'NAPH130',
     handle: '@NAPH130',
-    school: '北京交通大学',
-    major: '软件工程',
+    location: '北京·海淀',
+    education: '北京交通大学软件工程在读',
   },
   home: {
     greeting: '你好，我是',
@@ -27,7 +27,7 @@ export default {
     totalPosts: '共 {count} 篇',
   },
   post: { back: '返回文章列表', prev: '上一篇', next: '下一篇', toc: '目录' },
-  about: { title: '关于' },
+  about: { title: '关于', friends: '友情链接' },
   notFound: { title: '404', message: '页面不存在', backHome: '返回首页' },
   theme: { light: '浅色', dark: '暗色' },
 }

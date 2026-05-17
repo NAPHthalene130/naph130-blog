@@ -10,8 +10,8 @@ export default {
     reading: 'read',
     name: 'NAPH130',
     handle: '@NAPH130',
-    school: 'Beijing JiaoTong University',
-    major: 'Software Engineering',
+    location: 'Beijing · Haidian',
+    education: 'Beijing JiaoTong Univ., SE',
   },
   home: {
     greeting: 'Hi, I am',
@@ -27,7 +27,7 @@ export default {
     totalPosts: '{count} posts',
   },
   post: { back: 'Back to posts', prev: 'Previous', next: 'Next', toc: 'Contents' },
-  about: { title: 'About' },
+  about: { title: 'About', friends: 'Friend Links' },
   notFound: { title: '404', message: 'Page not found', backHome: 'Back to home' },
   theme: { light: 'Light', dark: 'Dark' },
 }

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import type { PostMeta } from '@/types'
+import { useClock } from '@/composables/useClock'
 
 const { t } = useI18n()
+const { time } = useClock()
 
 const props = defineProps<{
   categories: { name: string; count: number }[]
@@ -25,8 +26,10 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
         >N</div>
         <div class="font-bold text-base truncate px-1" style="color: var(--color-text);">{{ t('sidebar.name') }}</div>
         <div class="text-xs mt-0.5 truncate px-1" style="color: var(--color-text-muted);">{{ t('sidebar.handle') }}</div>
-        <div class="text-xs mt-2 leading-relaxed px-1" style="color: var(--color-text-secondary);">{{ t('sidebar.school') }}</div>
-        <div class="text-xs leading-relaxed px-1" style="color: var(--color-text-secondary);">{{ t('sidebar.major') }}</div>
+        <div class="text-xs mt-2.5 leading-relaxed px-1" style="color: var(--color-text-secondary);">
+          {{ t('sidebar.location') }} <span class="font-mono font-medium" style="color: var(--color-accent);">{{ time }}</span>
+        </div>
+        <div class="text-xs leading-relaxed px-1" style="color: var(--color-text-secondary);">{{ t('sidebar.education') }}</div>
         <div class="flex justify-center gap-2 mt-3 px-2">
           <a href="https://github.com/NAPHthalene130/" target="_blank" rel="noopener" class="text-xs px-2 py-1.5 rounded-lg font-medium hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent); text-decoration: none;">🐙 GitHub</a>
           <a href="mailto:naphthalene130@gmail.com" class="text-xs px-2 py-1.5 rounded-lg font-medium hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent); text-decoration: none;">📧 Email</a>
