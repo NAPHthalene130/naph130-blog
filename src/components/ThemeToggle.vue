@@ -9,10 +9,32 @@ const { t } = useI18n()
 <template>
   <button
     @click="toggle()"
-    class="w-8.5 h-8.5 rounded-full border border-black/6 dark:border-white/8 flex items-center justify-center transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5"
+    class="theme-btn"
     :title="isDark ? t('theme.light') : t('theme.dark')"
   >
-    <span v-if="!isDark" class="text-sm">🌙</span>
-    <span v-else class="text-sm">☀️</span>
+    <span class="text-sm leading-none">{{ isDark ? '☀️' : '🌙' }}</span>
   </button>
 </template>
+
+<style scoped>
+.theme-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(40, 80, 50, 0.12);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  padding: 0;
+}
+html.dark .theme-btn {
+  border-color: rgba(100, 160, 120, 0.12);
+}
+.theme-btn:hover {
+  background: var(--color-accent-soft);
+}
+</style>

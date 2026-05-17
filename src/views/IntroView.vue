@@ -57,15 +57,17 @@ const filtered = computed<PostMeta[]>(() => {
     <!-- 时间线 -->
     <div v-if="filtered.length > 0">
       <div class="text-xs font-bold uppercase tracking-wider mb-5" style="color: var(--color-text-muted);">📡 {{ t('home.timeline') }}</div>
-      <div class="relative pl-10">
-        <div class="absolute left-3 top-2 bottom-2 w-0.5" style="background: var(--color-timeline);" />
+      <div style="position: relative; padding-left: 36px;">
+        <!-- 竖线 -->
+        <div style="position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--color-timeline);" />
         <div
           v-for="post in filtered"
           :key="post.slug"
-          class="relative mb-8"
+          style="position: relative; margin-bottom: 32px;"
         >
-          <div class="absolute -left-8.5 top-1.5 w-5 h-5 rounded-md flex items-center justify-center" style="background: var(--color-accent);">
-            <div class="w-1.5 h-1.5 bg-white rounded-sm" />
+          <!-- 菱形圆点 — 精确对齐竖线 -->
+          <div style="position: absolute; left: -33px; top: 6px; width: 18px; height: 18px; border-radius: 5px; background: var(--color-accent); display: flex; align-items: center; justify-content: center;">
+            <div style="width: 6px; height: 6px; background: #fff; border-radius: 2px;" />
           </div>
           <div class="text-xs font-medium tracking-wider mb-1.5" style="color: var(--color-text-muted);">{{ post.date }}</div>
           <RouterLink

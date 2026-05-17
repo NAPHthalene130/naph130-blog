@@ -23,9 +23,9 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
           class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl"
           style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 4px 16px rgba(45,138,78,0.25);"
         >👤</div>
-        <div class="font-bold text-base" style="color: var(--color-text);">NAPHthalene</div>
-        <div class="text-xs mt-0.5" style="color: var(--color-text-muted);">@naph130</div>
-        <div class="text-xs mt-2.5 leading-relaxed" style="color: var(--color-text-secondary);">前端开发者<br/>Vue · TS · Node.js</div>
+        <div class="font-bold text-base truncate" style="color: var(--color-text);">NAPHthalene</div>
+        <div class="text-xs mt-0.5 truncate" style="color: var(--color-text-muted);">@naph130</div>
+        <div class="text-xs mt-2.5 leading-relaxed px-1 break-words" style="color: var(--color-text-secondary);">前端开发者 · Vue · TS · Node.js</div>
         <div class="flex justify-center gap-2 mt-3">
           <a href="#" class="text-xs px-2 py-1.5 rounded-lg font-medium" style="background: var(--color-accent-soft); color: var(--color-accent);">🐙 GitHub</a>
           <a href="#" class="text-xs px-2 py-1.5 rounded-lg font-medium" style="background: var(--color-accent-soft); color: var(--color-accent);">📧 Email</a>

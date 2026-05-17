@@ -10,11 +10,10 @@ const md = new MarkdownIt({
   highlight(str: string, lang: string): string {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        const highlighted = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
-        return buildCodeBlock(highlighted, lang)
-      } catch { /* fall through */ }
+        return hljs.highlight(str, { language: lang, ignoreIllegals: true }).value
+      } catch { /* fallback */ }
     }
-    return buildCodeBlock(md.utils.escapeHtml(str), '')
+    return md.utils.escapeHtml(str)
   },
 })
 
@@ -26,38 +25,64 @@ const slugify = (s: string) =>
     .trim()
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
+    .replace(/(^-|-$)/g, '')
 
-md.renderer.rules.heading_open = function (tokens, idx) {
-  const level = tokens[idx].tag
+// ── 标题注入 id 用于 TOC 锚点 ──
+const defaultHeadingOpen = md.renderer.rules.heading_open!
+
+md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
+  const token = tokens[idx]
+  const level = token.tag
   if (level === 'h2' || level === 'h3') {
-    const inline = tokens[idx + 1]
-    if (inline && inline.content) {
-      const id = slugify(inline.content)
-      tokens[idx].attrSet('id', id)
+    // 下一个 token 是 inline
+    const inlineToken = tokens[idx + 1]
+    if (inlineToken && inlineToken.type === 'inline' && inlineToken.content) {
+      const id = slugify(inlineToken.content)
+      if (id) {
+        token.attrSet('id', id)
+      }
     }
   }
-  return md.renderer.renderToken(tokens, idx, {})
+  return defaultHeadingOpen(tokens, idx, options, env, self)
 }
 
-md.renderer.rules.image = function (tokens, idx) {
+// ── 代码块：用 fence 规则取代 highlight 包裹 ──
+md.renderer.rules.fence = (tokens, idx) => {
+  const token = tokens[idx]
+  const lang = token.info.trim()
+  const code = token.content
+  const langLabel = lang ? `<span>${lang}</span>` : '<span>&nbsp;</span>'
+
+  // 手动高亮（highlight 选项不可用，因为我们需要控制整个输出）
+  let highlighted: string
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      highlighted = hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
+    } catch {
+      highlighted = md.utils.escapeHtml(code)
+    }
+  } else {
+    highlighted = md.utils.escapeHtml(code)
+  }
+
+  return `<div class="code-block-wrapper">
+    <div class="code-header">
+      ${langLabel}
+      <button class="copy-btn" onclick="(function(b){var c=b.closest('.code-block-wrapper').querySelector('code');navigator.clipboard.writeText(c.textContent||'').then(function(){b.textContent='\u5df2\u590d\u5236';setTimeout(function(){b.textContent='\u590d\u5236'},2000)})})(this)">复制</button>
+    </div>
+    <pre><code class="hljs${lang ? ' language-' + lang : ''}">${highlighted}</code></pre>
+  </div>`
+}
+
+// ── 图片：点击触发 lightbox ──
+md.renderer.rules.image = (tokens, idx, options, _env, self) => {
   const token = tokens[idx]
   const src = token.attrGet('src') || ''
   const alt = token.attrGet('alt') || ''
   token.attrSet('loading', 'lazy')
   token.attrSet('onclick', `window.__openLightbox?.('${md.utils.escapeHtml(src)}', '${md.utils.escapeHtml(alt)}')`)
   token.attrSet('style', 'cursor: zoom-in;')
-  return md.renderer.renderToken(tokens, idx, {})
-}
-
-function buildCodeBlock(code: string, lang: string): string {
-  const langLabel = lang ? `<span>${lang}</span>` : '<span></span>'
-  return `<div class="code-block-wrapper">
-    <div class="code-header">
-      ${langLabel}
-      <button class="copy-btn" onclick="(function(b){var c=b.closest('.code-block-wrapper').querySelector('code');navigator.clipboard.writeText(c.textContent||'').then(function(){b.textContent='已复制';setTimeout(function(){b.textContent='复制'},2000)})})(this)">复制</button>
-    </div>
-    <pre><code>${code}</code></pre>
-  </div>`
+  return self.renderToken(tokens, idx, options)
 }
 
 export function renderMarkdown(content: string): string {
@@ -65,7 +90,7 @@ export function renderMarkdown(content: string): string {
 }
 
 export function extractToc(html: string): TocItem[] {
-  const headingRegex = /<h([23])\s+id="([^"]*)"[^>]*>(.*?)<\/h[23]>/gi
+  const headingRegex = /<h([23])\s[^>]*?\bid="([^"]*)"[^>]*>([\s\S]*?)<\/h[23]>/gi
   const items: { level: number; id: string; text: string }[] = []
 
   let match: RegExpExecArray | null
