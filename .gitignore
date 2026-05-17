@@ -6,6 +6,15 @@ node_modules/
 dist/
 dist-ssr/
 
+# TypeScript compiled output
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
+tailwind.config.d.ts
+tailwind.config.js
+scripts/*.d.ts
+scripts/*.js
+
 # IDE
 .vscode/*
 !.vscode/extensions.json
