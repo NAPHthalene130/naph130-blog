@@ -13,5 +13,5 @@ function openLightbox(src: string, alt: string) {
 </script>
 
 <template>
-  <div class="prose-content" v-html="html" />
+  <div class="prose-content" v-html="html"></div>
 </template>

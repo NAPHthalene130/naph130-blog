@@ -69,5 +69,5 @@ onUnmounted(() => { cancelAnimationFrame(animId) })
 </script>
 
 <template>
-  <canvas ref="canvasRef" class="fixed inset-0 z-0 pointer-events-none" />
+  <canvas ref="canvasRef" class="fixed inset-0 z-0 pointer-events-none"></canvas>
 </template>

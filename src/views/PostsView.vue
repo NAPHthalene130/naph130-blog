@@ -28,9 +28,9 @@ const { query, results } = useSearch(() => filtered.value)
 
     <div v-if="loading" class="flex flex-col gap-5">
       <div v-for="i in 3" :key="i" class="glass-card p-6 animate-pulse">
-        <div class="h-5 bg-black/5 dark:bg-white/5 rounded w-3/4 mb-3" />
-        <div class="h-4 bg-black/5 dark:bg-white/5 rounded w-1/3 mb-2" />
-        <div class="h-12 bg-black/5 dark:bg-white/5 rounded w-full" />
+        <div class="h-5 bg-black/5 dark:bg-white/5 rounded w-3/4 mb-3"></div>
+        <div class="h-4 bg-black/5 dark:bg-white/5 rounded w-1/3 mb-2"></div>
+        <div class="h-12 bg-black/5 dark:bg-white/5 rounded w-full"></div>
       </div>
     </div>
 

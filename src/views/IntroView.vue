@@ -73,10 +73,10 @@ const filtered = computed<PostMeta[]>(() => {
     <div v-if="filtered.length > 0">
       <div class="text-xs font-bold uppercase tracking-wider mb-5" style="color: var(--color-text-muted);">📡 {{ t('home.timeline') }}</div>
       <div style="position: relative; padding-left: 36px;">
-        <div style="position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--color-timeline);" />
+        <div style="position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--color-timeline);"></div>
         <div v-for="post in filtered" :key="post.slug" style="position: relative; margin-bottom: 32px;">
           <div style="position: absolute; left: -33px; top: 6px; width: 18px; height: 18px; border-radius: 5px; background: var(--color-accent); display: flex; align-items: center; justify-content: center;">
-            <div style="width: 6px; height: 6px; background: #fff; border-radius: 2px;" />
+            <div style="width: 6px; height: 6px; background: #fff; border-radius: 2px;"></div>
           </div>
           <div class="text-xs font-medium tracking-wider mb-1.5" style="color: var(--color-text-muted);">{{ post.date }}</div>
           <RouterLink :to="{ name: 'post', params: { slug: post.slug } }" class="block rounded-2xl p-5 transition-all duration-200 hover:translate-x-2" style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">

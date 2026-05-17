@@ -18,6 +18,6 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
       class="h-full transition-all duration-150 ease-out"
       style="background: var(--color-accent);"
       :style="{ width: `${progress}%` }"
-    />
+    ></div>
   </div>
 </template>

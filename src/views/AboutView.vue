@@ -48,13 +48,13 @@ onMounted(load)
 <template>
   <div class="flex flex-col gap-8">
     <div v-if="aboutHtml" class="glass-card p-8 md:p-10">
-      <div class="prose-content" v-html="aboutHtml" />
+      <div class="prose-content" v-html="aboutHtml"></div>
     </div>
     <div v-if="friends.length > 0" class="glass-card p-8">
       <h2 class="text-lg font-bold mb-5">🔗 {{ t('about.friends') }}</h2>
       <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
         <a v-for="f in friends" :key="f.url" :href="f.url" target="_blank" rel="noopener" class="flex items-center gap-4 p-4.5 rounded-2xl transition-all duration-200 hover:-translate-y-1" style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border);">
-          <div v-if="f.picUrl" class="w-11 h-11 rounded-full shrink-0 bg-cover bg-center" :style="{ backgroundImage: `url(${f.picUrl})` }" />
+          <div v-if="f.picUrl" class="w-11 h-11 rounded-full shrink-0 bg-cover bg-center" :style="{ backgroundImage: `url(${f.picUrl})` }"></div>
           <div v-else class="w-11 h-11 rounded-full shrink-0 flex items-center justify-center text-sm font-bold" style="background: var(--color-accent-soft); color: var(--color-accent);">{{ f.id.charAt(0) }}</div>
           <div class="flex-1 min-w-0">
             <div class="font-semibold text-sm" style="color: var(--color-text);">{{ f.id }}</div>

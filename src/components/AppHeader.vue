@@ -34,7 +34,7 @@ const activeNav = computed(() => {
       >
         {{ item.label.value }}
       </RouterLink>
-      <span class="nav-sep" />
+      <span class="nav-sep"></span>
       <ThemeToggle />
       <LanguageSwitcher />
     </nav>
