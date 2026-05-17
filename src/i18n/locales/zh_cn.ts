@@ -17,6 +17,8 @@ export default {
     greeting: '你好，我是',
     subtitle: '',
     smile: ':)',
+    pinned: '置顶',
+    timeline: '时间线',
   },
   posts: {
     title: '文章',

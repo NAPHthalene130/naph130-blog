@@ -56,6 +56,10 @@ const filtered = computed<PostMeta[]>(() => {
         <RouterLink :to="{ name: 'post', params: { slug: pinnedPosts[0].slug } }" class="text-xl font-bold mb-2 hover:underline" style="color: var(--color-text);">
           {{ pinnedPosts[0].title }}
         </RouterLink>
+        <div class="flex gap-1.5 mb-2 flex-wrap">
+          <span v-if="pinnedPosts[0].category" class="badge-cat">{{ pinnedPosts[0].category }}</span>
+          <span v-for="tag in pinnedPosts[0].tags" :key="tag" class="badge-tag">{{ tag }}</span>
+        </div>
         <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ pinnedPosts[0].description }}</p>
         <div class="text-xs mt-3" style="color: var(--color-text-muted);">{{ pinnedPosts[0].date }} · {{ t('posts.readingTime', { minutes: pinnedPosts[0].readingTime }) }}</div>
       </div>

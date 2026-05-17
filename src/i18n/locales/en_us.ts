@@ -17,6 +17,8 @@ export default {
     greeting: 'Hi, I am',
     subtitle: '',
     smile: ':)',
+    pinned: 'Pinned',
+    timeline: 'Timeline',
   },
   posts: {
     title: 'Posts',
