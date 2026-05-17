@@ -18,22 +18,22 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
   <aside class="app-sidebar">
     <div class="flex flex-col gap-4">
       <!-- 个人卡片 -->
-      <div class="glass-card text-center p-5">
+      <div class="glass-card text-center p-6">
         <div
           class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl"
           style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 4px 16px rgba(45,138,78,0.25);"
         >👤</div>
-        <div class="font-bold text-base truncate" style="color: var(--color-text);">NAPHthalene</div>
-        <div class="text-xs mt-0.5 truncate" style="color: var(--color-text-muted);">@naph130</div>
-        <div class="text-xs mt-2.5 leading-relaxed px-1 break-words" style="color: var(--color-text-secondary);">前端开发者 · Vue · TS · Node.js</div>
-        <div class="flex justify-center gap-2 mt-3">
+        <div class="font-bold text-base truncate px-1" style="color: var(--color-text);">NAPHthalene</div>
+        <div class="text-xs mt-0.5 truncate px-1" style="color: var(--color-text-muted);">@naph130</div>
+        <div class="text-xs mt-2.5 leading-relaxed px-2 break-words" style="color: var(--color-text-secondary);">前端开发者 · Vue · TS · Node.js</div>
+        <div class="flex justify-center gap-2 mt-3 px-2">
           <a href="#" class="text-xs px-2 py-1.5 rounded-lg font-medium" style="background: var(--color-accent-soft); color: var(--color-accent);">🐙 GitHub</a>
           <a href="#" class="text-xs px-2 py-1.5 rounded-lg font-medium" style="background: var(--color-accent-soft); color: var(--color-accent);">📧 Email</a>
         </div>
       </div>
 
       <!-- 类别 -->
-      <div class="glass-card">
+      <div class="glass-card p-5">
         <div class="side-title">📂 {{ t('sidebar.categories') }}</div>
         <div class="cat-list">
           <button :class="{ active: activeCategory === 'all' }" @click="emit('select-category', 'all')">
@@ -51,7 +51,7 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
       </div>
 
       <!-- 标签 -->
-      <div class="glass-card">
+      <div class="glass-card p-5">
         <div class="side-title">🏷️ {{ t('sidebar.tags') }}</div>
         <div class="tag-cloud-side">
           <button v-for="tag in tags" :key="tag.name" @click="emit('select-category', tag.name)">{{ tag.name }}</button>
@@ -59,9 +59,9 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
       </div>
 
       <!-- 统计 -->
-      <div class="glass-card">
+      <div class="glass-card p-5">
         <div class="side-title">📊 {{ t('sidebar.stats') }}</div>
-        <div class="text-sm leading-9" style="color: var(--color-text-secondary);">
+        <div class="text-sm leading-9 px-1" style="color: var(--color-text-secondary);">
           <div>📄 {{ t('sidebar.posts') }} <span style="color: var(--color-accent); font-weight: 600;">{{ totalPosts }}</span></div>
         </div>
       </div>

@@ -28,7 +28,8 @@ const slugify = (s: string) =>
     .replace(/(^-|-$)/g, '')
 
 // ── 标题注入 id 用于 TOC 锚点 ──
-const defaultHeadingOpen = md.renderer.rules.heading_open!
+const defaultHeadingOpen = md.renderer.rules.heading_open
+  || ((tokens: any, idx: number, options: any, _env: any, self: any) => self.renderToken(tokens, idx, options))
 
 md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx]
