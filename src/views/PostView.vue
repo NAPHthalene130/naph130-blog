@@ -6,7 +6,7 @@ import type { PostMeta } from '@/types'
 import { usePosts } from '@/composables/usePosts'
 import { useToc } from '@/composables/useToc'
 import { useReadingTime } from '@/composables/useReadingTime'
-import { renderMarkdown, extractToc } from '@/utils/markdown'
+import { renderMarkdown } from '@/utils/markdown'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import TableOfContents from '@/components/TableOfContents.vue'
 import PostNav from '@/components/PostNav.vue'
@@ -43,6 +43,10 @@ async function load() {
     error.value = (e as Error).message
   } finally {
     loading.value = false
+    // setup TOC observer after DOM update
+    setTimeout(() => {
+      useToc(() => renderedHtml.value)
+    }, 200)
   }
 }
 
@@ -123,9 +127,10 @@ const adjacent = computed(() => getAdjacentPosts(slug.value))
     </div>
 
     <template v-if="!loading && !error && meta">
-      <div class="flex gap-8">
+      <div class="flex gap-8 items-start">
+        <!-- 正文区 -->
         <div class="flex-1 min-w-0">
-          <div class="glass-card p-8 mb-8">
+          <div class="glass-card p-8 md:p-10">
             <h1 class="text-3xl font-bold mb-4 tracking-tight" style="color: var(--color-text);">{{ meta.title }}</h1>
             <div class="flex items-center gap-4 text-sm mb-4 flex-wrap" style="color: var(--color-text-muted);">
               <time :datetime="meta.date">{{ meta.date }}</time>
@@ -142,6 +147,8 @@ const adjacent = computed(() => getAdjacentPosts(slug.value))
           </div>
           <PostNav :prev="adjacent.prev" :next="adjacent.next" />
         </div>
+
+        <!-- 右侧 TOC 导航 -->
         <TableOfContents :items="tocItems" :activeId="activeId" />
       </div>
     </template>
