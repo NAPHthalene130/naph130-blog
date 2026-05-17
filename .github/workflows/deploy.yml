@@ -24,7 +24,7 @@ jobs:
       - name: 安装 pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 10
 
       - name: 安装 Node.js
         uses: actions/setup-node@v4
@@ -33,7 +33,7 @@ jobs:
           cache: pnpm
 
       - name: 安装依赖
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: 生成文章 Meta
         run: pnpm generate-meta
