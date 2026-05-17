@@ -8,6 +8,7 @@ export interface PostMeta {
   tags: string[]
   pinned: boolean
   cover?: string
+  coverImg?: string
   wordCount: number
   readingTime: number
 }

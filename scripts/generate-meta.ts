@@ -3,7 +3,7 @@ import { join, basename, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const POSTS_DIR = join(__dirname, '..', 'public', 'posts')
+const POSTS_DIR = join(__dirname, '..', 'src', 'content', 'posts')
 const LOCALES = ['zh_cn', 'en_us']
 
 interface PostMeta {
@@ -16,6 +16,7 @@ interface PostMeta {
   tags: string[]
   pinned: boolean
   cover?: string
+  coverImg?: string
   wordCount: number
   readingTime: number
 }
@@ -94,6 +95,7 @@ for (const locale of LOCALES) {
       tags: meta.tags || [],
       pinned: meta.pinned === true,
       cover: meta.cover || undefined,
+      coverImg: meta.coverImg || undefined,
       wordCount,
       readingTime,
     })

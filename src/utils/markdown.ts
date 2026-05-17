@@ -86,8 +86,17 @@ md.renderer.rules.image = (tokens, idx, options, _env, self) => {
   return self.renderToken(tokens, idx, options)
 }
 
+const BASE = import.meta.env.BASE_URL || '/'
+
+// ── 预处理 [[img.jpg]] 语法 → ![](/assets/posts/img.jpg) ──
+function preprocessInlineImages(md: string): string {
+  return md.replace(/\[\[([^\]]+\.(jpg|jpeg|png|gif|webp|svg))\]\]/gi, (_m, file) => {
+    return `![](${BASE}assets/posts/${file.trim()})`
+  })
+}
+
 export function renderMarkdown(content: string): string {
-  return md.render(content)
+  return md.render(preprocessInlineImages(content))
 }
 
 export function extractToc(html: string): TocItem[] {

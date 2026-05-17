@@ -24,12 +24,6 @@
   --color-tag-text: #3b6cb4;
   --color-timeline: rgba(100, 160, 120, 0.45);
   --color-divider: rgba(40, 80, 50, 0.08);
-
-  /* 动态背景色 — 加强对比度 */
-  --grad-1: #e8f5e9;
-  --grad-2: #c8e6c9;
-  --grad-3: #b2dfdb;
-  --grad-4: #dcedc8;
 }
 
 html.dark {
@@ -69,56 +63,6 @@ body {
   transition: color 0.4s;
   background: transparent;
   overflow-x: hidden;
-}
-
-/* ═══ 动态渐变背景 ═══ */
-.dynamic-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 90% 80% at 10% 20%, var(--grad-2) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 70% at 85% 5%, var(--grad-3) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 80% at 50% 80%, var(--grad-1) 0%, transparent 45%),
-    radial-gradient(ellipse 80% 65% at 30% 55%, var(--grad-4) 0%, transparent 55%);
-  background-color: var(--grad-1);
-  animation: bgShift 14s ease-in-out infinite;
-}
-
-@keyframes bgShift {
-  0%, 100% {
-    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%;
-  }
-  20% {
-    background-position: 25% -15%, 75% 20%, 55% 85%, -15% 110%;
-  }
-  40% {
-    background-position: 20% 20%, 80% -15%, 35% 115%, 20% 80%;
-  }
-  60% {
-    background-position: -5% 15%, 105% 15%, 60% 85%, 25% 105%;
-  }
-  80% {
-    background-position: 10% 5%, 90% 5%, 45% 95%, 10% 90%;
-  }
-}
-
-/* ═══ 网格纹理 ═══ */
-.grid-texture {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.3;
-  background-image:
-    radial-gradient(circle at center, rgba(45, 138, 78, 0.15) 0.6px, transparent 0.6px);
-  background-size: 8px 8px;
-}
-html.dark .grid-texture {
-  opacity: 0.25;
-  background-image:
-    radial-gradient(circle at center, rgba(92, 186, 106, 0.15) 0.6px, transparent 0.6px);
 }
 
 /* ═══ 磨砂卡片 ═══ */

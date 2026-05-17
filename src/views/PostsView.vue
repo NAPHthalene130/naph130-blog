@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { usePosts } from '@/composables/usePosts'
 import { useSearch } from '@/composables/useSearch'
 import { useCategoryFilter } from '@/composables/useCategoryFilter'
+import { getCoverStyle } from '@/utils/cover'
 import SearchBox from '@/components/SearchBox.vue'
 import type { PostMeta } from '@/types'
 
@@ -45,10 +46,8 @@ const { query, results } = useSearch(() => filtered.value)
         <RouterLink
           :to="{ name: 'post', params: { slug: post.slug } }"
           class="w-44 shrink-0 flex items-center justify-center text-white/35 text-2xl"
-          style="background: linear-gradient(135deg, #2d8a4e, #4caf50); min-height: 170px;"
-        >
-          {{ post.category || '📄' }}
-        </RouterLink>
+          :style="{ ...getCoverStyle(post.coverImg, post.title), minHeight: '170px' }"
+        ></RouterLink>
         <div class="p-6 flex-1 flex flex-col justify-center min-w-0">
           <RouterLink
             :to="{ name: 'post', params: { slug: post.slug } }"
