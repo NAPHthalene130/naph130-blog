@@ -10,7 +10,7 @@ const { posts, pinnedPosts } = usePosts()
 const { activeCategory } = useCategoryFilter()
 const BASE = import.meta.env.BASE_URL
 const avatarLoaded = ref(false)
-const avatarSrc = `${BASE}assets/avatar.webp`
+const avatarSrc = `${BASE}assets/avatar.jpg`
 
 const filtered = computed<PostMeta[]>(() => {
   if (activeCategory.value === 'all') return posts.value

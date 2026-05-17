@@ -8,7 +8,7 @@ const { time } = useClock()
 const BASE = import.meta.env.BASE_URL
 
 const avatarLoaded = ref(false)
-const avatarSrc = `${BASE}assets/avatar.webp`
+const avatarUrl = `${BASE}assets/avatar.jpg`
 
 const props = defineProps<{
   categories: { name: string; count: number }[]
@@ -27,7 +27,7 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
       <div class="glass-card text-center p-6">
       <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl overflow-hidden shadow-lg" :style="{ background: avatarLoaded ? 'transparent' : 'linear-gradient(135deg, #2d8a4e, #4caf50)', boxShadow: '0 4px 16px rgba(45,138,78,0.25)' }">
         <img
-          :src="avatarSrc"
+          :src="avatarUrl"
           class="w-full h-full object-cover"
           :class="{ hidden: !avatarLoaded }"
           @load="avatarLoaded = true"
