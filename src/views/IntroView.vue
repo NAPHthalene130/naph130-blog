@@ -8,6 +8,7 @@ import type { PostMeta } from '@/types'
 const { t } = useI18n()
 const { posts, pinnedPosts } = usePosts()
 const { activeCategory } = useCategoryFilter()
+const BASE = import.meta.env.BASE_URL
 
 const filtered = computed<PostMeta[]>(() => {
   if (activeCategory.value === 'all') return posts.value
@@ -22,9 +23,18 @@ const filtered = computed<PostMeta[]>(() => {
     <!-- 自我介绍 -->
     <div class="glass-card flex gap-8 items-center p-8 md:p-10">
       <div
-        class="w-28 h-28 md:w-32 md:h-32 rounded-2xl shrink-0 flex items-center justify-center text-white text-5xl"
+        class="w-28 h-28 md:w-32 md:h-32 rounded-2xl shrink-0 flex items-center justify-center text-white text-5xl overflow-hidden"
         style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 8px 28px rgba(45,138,78,0.2);"
-      >N</div>
+      >
+        <img
+          :src="`${BASE}assets/avatar.webp`"
+          class="w-full h-full object-cover"
+          @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
+          onload="this.parentElement.style.background='none'"
+          alt=""
+        />
+        <span>N</span>
+      </div>
       <div class="flex-1 min-w-0">
         <h1 class="text-2xl md:text-3xl font-bold mb-1 tracking-tight" style="color: var(--color-text);">
           {{ t('home.greeting') }} NAPH130
