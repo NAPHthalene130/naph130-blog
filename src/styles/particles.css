@@ -1,0 +1,109 @@
+/* Shooting star fallback effect when no background image */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes shooting-star {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-35deg);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-300px) translateY(300px) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+.particles-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Stars */
+.particles-bg::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow:
+    50px 100px 0 currentColor,
+    150px 30px 0 currentColor,
+    250px 200px 0 currentColor,
+    400px 80px 0 currentColor,
+    550px 250px 0 currentColor,
+    700px 50px 0 currentColor,
+    850px 180px 0 currentColor,
+    100px 300px 0 currentColor,
+    300px 350px 0 currentColor,
+    500px 400px 0 currentColor,
+    650px 320px 0 currentColor,
+    800px 70px 0 currentColor,
+    200px 150px 0 currentColor,
+    600px 140px 0 currentColor,
+    900px 300px 0 currentColor,
+    75px 220px 0 currentColor,
+    350px 120px 0 currentColor;
+  opacity: 0.3;
+  animation: twinkle 3s ease-in-out infinite;
+  color: var(--color-text-secondary);
+}
+
+.dark .particles-bg::before {
+  opacity: 0.5;
+}
+
+/* Shooting stars */
+.particles-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  border-radius: 50%;
+  animation: shooting-star 4s linear infinite;
+  opacity: 0;
+  color: var(--color-text-secondary);
+}
+
+.particles-star:nth-child(1) {
+  top: 15%;
+  left: 80%;
+  animation-delay: 0s;
+  animation-duration: 3.5s;
+}
+
+.particles-star:nth-child(2) {
+  top: 25%;
+  left: 60%;
+  animation-delay: 1.5s;
+  animation-duration: 4s;
+}
+
+.particles-star:nth-child(3) {
+  top: 10%;
+  left: 90%;
+  animation-delay: 3s;
+  animation-duration: 3s;
+}
+
+.particles-star:nth-child(4) {
+  top: 40%;
+  left: 75%;
+  animation-delay: 2s;
+  animation-duration: 4.5s;
+}
+
+.particles-star:nth-child(5) {
+  top: 50%;
+  left: 55%;
+  animation-delay: 0.8s;
+  animation-duration: 3.8s;
+}
