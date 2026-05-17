@@ -22,13 +22,14 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
         <div
           class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl"
           style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 4px 16px rgba(45,138,78,0.25);"
-        >👤</div>
-        <div class="font-bold text-base truncate px-1" style="color: var(--color-text);">NAPHthalene</div>
-        <div class="text-xs mt-0.5 truncate px-1" style="color: var(--color-text-muted);">@naph130</div>
-        <div class="text-xs mt-2.5 leading-relaxed px-2 break-words" style="color: var(--color-text-secondary);">前端开发者 · Vue · TS · Node.js</div>
+        >N</div>
+        <div class="font-bold text-base truncate px-1" style="color: var(--color-text);">{{ t('sidebar.name') }}</div>
+        <div class="text-xs mt-0.5 truncate px-1" style="color: var(--color-text-muted);">{{ t('sidebar.handle') }}</div>
+        <div class="text-xs mt-2 leading-relaxed px-1" style="color: var(--color-text-secondary);">{{ t('sidebar.school') }}</div>
+        <div class="text-xs leading-relaxed px-1" style="color: var(--color-text-secondary);">{{ t('sidebar.major') }}</div>
         <div class="flex justify-center gap-2 mt-3 px-2">
-          <a href="#" class="text-xs px-2 py-1.5 rounded-lg font-medium" style="background: var(--color-accent-soft); color: var(--color-accent);">🐙 GitHub</a>
-          <a href="#" class="text-xs px-2 py-1.5 rounded-lg font-medium" style="background: var(--color-accent-soft); color: var(--color-accent);">📧 Email</a>
+          <a href="https://github.com/NAPHthalene130/" target="_blank" rel="noopener" class="text-xs px-2 py-1.5 rounded-lg font-medium hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent); text-decoration: none;">🐙 GitHub</a>
+          <a href="mailto:naphthalene130@gmail.com" class="text-xs px-2 py-1.5 rounded-lg font-medium hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent); text-decoration: none;">📧 Email</a>
         </div>
       </div>
 

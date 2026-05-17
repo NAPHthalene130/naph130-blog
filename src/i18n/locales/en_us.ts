@@ -8,13 +8,15 @@ export default {
     posts: 'posts',
     words: 'words',
     reading: 'read',
+    name: 'NAPH130',
+    handle: '@NAPH130',
+    school: 'Beijing JiaoTong University',
+    major: 'Software Engineering',
   },
   home: {
     greeting: 'Hi, I am',
-    subtitle: 'Frontend Developer',
-    viewPosts: 'View Posts',
-    pinned: 'Pinned',
-    timeline: 'Recent',
+    subtitle: '',
+    smile: ':)',
   },
   posts: {
     title: 'Posts',
@@ -25,7 +27,7 @@ export default {
     totalPosts: '{count} posts',
   },
   post: { back: 'Back to posts', prev: 'Previous', next: 'Next', toc: 'Contents' },
-  about: { title: 'About Me', friends: 'Friend Links' },
+  about: { title: 'About' },
   notFound: { title: '404', message: 'Page not found', backHome: 'Back to home' },
   theme: { light: 'Light', dark: 'Dark' },
 }

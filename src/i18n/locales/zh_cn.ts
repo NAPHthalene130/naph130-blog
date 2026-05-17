@@ -8,13 +8,15 @@ export default {
     posts: '文章',
     words: '字数',
     reading: '阅读',
+    name: 'NAPH130',
+    handle: '@NAPH130',
+    school: '北京交通大学',
+    major: '软件工程',
   },
   home: {
     greeting: '你好，我是',
-    subtitle: '前端开发者',
-    viewPosts: '查看文章',
-    pinned: '置顶推荐',
-    timeline: '最新动态',
+    subtitle: '',
+    smile: ':)',
   },
   posts: {
     title: '文章',
@@ -25,7 +27,7 @@ export default {
     totalPosts: '共 {count} 篇',
   },
   post: { back: '返回文章列表', prev: '上一篇', next: '下一篇', toc: '目录' },
-  about: { title: '关于我', friends: '友情链接' },
+  about: { title: '关于' },
   notFound: { title: '404', message: '页面不存在', backHome: '返回首页' },
   theme: { light: '浅色', dark: '暗色' },
 }

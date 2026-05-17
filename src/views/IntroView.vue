@@ -24,19 +24,16 @@ const filtered = computed<PostMeta[]>(() => {
       <div
         class="w-28 h-28 md:w-32 md:h-32 rounded-2xl shrink-0 flex items-center justify-center text-white text-5xl"
         style="background: linear-gradient(135deg, #2d8a4e, #4caf50); box-shadow: 0 8px 28px rgba(45,138,78,0.2);"
-      >👤</div>
+      >N</div>
       <div class="flex-1 min-w-0">
         <h1 class="text-2xl md:text-3xl font-bold mb-1 tracking-tight" style="color: var(--color-text);">
-          {{ t('home.greeting') }} NAPHthalene
+          {{ t('home.greeting') }} NAPH130
         </h1>
-        <div class="text-sm font-medium mb-3" style="color: var(--color-accent);">@naph130 · {{ t('home.subtitle') }}</div>
-        <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">
-          热爱探索前端技术的前沿边界。记录 Vue、TypeScript、CSS 等技术的学习与实践。像植物一样安静生长，用代码构建数字世界的生态。
-        </p>
+        <div class="text-sm font-medium mb-2" style="color: var(--color-accent);">@naph130</div>
+        <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ t('home.smile') }}</p>
         <div class="flex gap-2.5 mt-4 flex-wrap">
-          <a href="#" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent);">🐙 GitHub</a>
-          <a href="#" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent);">📧 Email</a>
-          <a href="#" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent);">📡 RSS</a>
+          <a href="https://github.com/NAPHthalene130/" target="_blank" rel="noopener" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent); text-decoration: none;">🐙 GitHub</a>
+          <a href="mailto:naphthalene130@gmail.com" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors hover:opacity-80" style="background: var(--color-accent-soft); color: var(--color-accent); text-decoration: none;">📧 Email</a>
         </div>
       </div>
     </div>
@@ -58,23 +55,13 @@ const filtered = computed<PostMeta[]>(() => {
     <div v-if="filtered.length > 0">
       <div class="text-xs font-bold uppercase tracking-wider mb-5" style="color: var(--color-text-muted);">📡 {{ t('home.timeline') }}</div>
       <div style="position: relative; padding-left: 36px;">
-        <!-- 竖线 -->
         <div style="position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--color-timeline);" />
-        <div
-          v-for="post in filtered"
-          :key="post.slug"
-          style="position: relative; margin-bottom: 32px;"
-        >
-          <!-- 菱形圆点 — 精确对齐竖线 -->
+        <div v-for="post in filtered" :key="post.slug" style="position: relative; margin-bottom: 32px;">
           <div style="position: absolute; left: -33px; top: 6px; width: 18px; height: 18px; border-radius: 5px; background: var(--color-accent); display: flex; align-items: center; justify-content: center;">
             <div style="width: 6px; height: 6px; background: #fff; border-radius: 2px;" />
           </div>
           <div class="text-xs font-medium tracking-wider mb-1.5" style="color: var(--color-text-muted);">{{ post.date }}</div>
-          <RouterLink
-            :to="{ name: 'post', params: { slug: post.slug } }"
-            class="block rounded-2xl p-5 transition-all duration-200 hover:translate-x-2"
-            style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);"
-          >
+          <RouterLink :to="{ name: 'post', params: { slug: post.slug } }" class="block rounded-2xl p-5 transition-all duration-200 hover:translate-x-2" style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">
             <div class="text-base font-semibold mb-1.5" style="color: var(--color-text);">{{ post.title }}</div>
             <div class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ post.description }}</div>
           </RouterLink>

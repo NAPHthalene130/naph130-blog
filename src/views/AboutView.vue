@@ -1,54 +1,50 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { FriendLink } from '@/types'
+import { renderMarkdown } from '@/utils/markdown'
+import { fetchAboutContent } from '@/utils/api'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const aboutHtml = ref('')
+const friendsHtml = ref('')
+const loading = ref(true)
 
-const friends: FriendLink[] = [
-  { name: "Alice's Blog", url: 'https://alice.dev', avatar: '', description: '热爱开源的前端工程师，专注 Vue 生态' },
-  { name: 'Bob 的技术笔记', url: 'https://bob.tech/blog', avatar: '', description: '专注后端架构与系统设计' },
-  { name: 'Carol 的设计小站', url: 'https://carol.design', avatar: '', description: 'UI/UX 设计与创意编程' },
-  { name: 'David 的全栈之路', url: 'https://david.io', avatar: '', description: '全栈开发 · 技术写作' },
-]
+async function load() {
+  loading.value = true
+  try {
+    const [aboutRaw, friendsRaw] = await Promise.all([
+      fetchAboutContent(locale.value, 'aboutMe'),
+      fetchAboutContent(locale.value, 'friendsLink'),
+    ])
+    aboutHtml.value = renderMarkdown(aboutRaw)
+    friendsHtml.value = renderMarkdown(friendsRaw)
+  } catch {
+    aboutHtml.value = ''
+    friendsHtml.value = ''
+  } finally {
+    loading.value = false
+  }
+}
+
+watch(locale, load)
+onMounted(load)
 </script>
 
 <template>
   <div class="flex flex-col gap-8">
-    <!-- 关于我 -->
-    <div class="glass-card p-8">
-      <h2 class="text-xl font-bold mb-4">{{ t('about.title') }}</h2>
-      <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">
-        一个热爱技术与设计的全栈开发者。工作涉及 Vue、TypeScript、Node.js 等技术栈。<br/><br/>
-        这个博客使用纯客户端渲染架构，所有内容以 Markdown 形式存储，通过 GitHub Pages 自动部署。背景支持自定义图片，无图片时呈现柔和的森林色动态渐变。
-      </p>
+    <div v-if="loading" class="glass-card p-8 animate-pulse">
+      <div class="h-6 bg-black/5 dark:bg-white/5 rounded w-1/3 mb-4" />
+      <div class="h-4 bg-black/5 dark:bg-white/5 rounded w-full mb-2" />
+      <div class="h-4 bg-black/5 dark:bg-white/5 rounded w-3/4" />
     </div>
 
-    <!-- 友链 -->
-    <div class="glass-card p-8">
-      <h2 class="text-lg font-bold mb-5">🔗 {{ t('about.friends') }}</h2>
-      <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
-        <a
-          v-for="friend in friends"
-          :key="friend.url"
-          :href="friend.url"
-          target="_blank"
-          rel="noopener"
-          class="flex items-center gap-4 p-4.5 rounded-2xl transition-all duration-200 hover:-translate-y-1"
-          style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border);"
-        >
-          <div
-            class="w-11 h-11 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold"
-            style="background: var(--color-accent-soft); color: var(--color-accent);"
-          >
-            {{ friend.name.charAt(0) }}
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-semibold text-sm" style="color: var(--color-text);">{{ friend.name }}</div>
-            <div class="text-xs truncate mt-0.5" style="color: var(--color-text-muted);">{{ friend.url }}</div>
-            <div class="text-xs mt-1" style="color: var(--color-text-secondary);">{{ friend.description }}</div>
-          </div>
-        </a>
-      </div>
+    <div v-if="aboutHtml" class="glass-card p-8 md:p-10">
+      <div class="prose-content" v-html="aboutHtml" />
+    </div>
+
+    <div v-if="friendsHtml" class="glass-card p-8 md:p-10">
+      <div class="prose-content" v-html="friendsHtml" />
     </div>
   </div>
 </template>
