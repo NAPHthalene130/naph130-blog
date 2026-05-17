@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>布局 C · 卡片瀑布</title>
+<style>
+:root {
+  --bg: #f2f7f4; --bg-alt: #e8f0ea;
+  --glass-bg: rgba(255,255,255,0.52); --glass-border: rgba(100,160,120,0.22);
+  --glass-shadow: 0 8px 32px rgba(40,80,50,0.05),0 2px 8px rgba(40,80,50,0.03);
+  --text: #1e3326; --text-secondary: #4a6656; --text-muted: #8aaa95;
+  --accent: #2d8a4e; --accent-soft: rgba(45,138,78,0.08); --accent-light: rgba(45,138,78,0.15);
+  --timeline: #c5daca; --tag-bg: rgba(45,138,78,0.08); --tag-text: #2d8a4e;
+  --card-hover: rgba(255,255,255,0.75); --divider: rgba(40,80,50,0.06);
+  --quote-bg: rgba(45,138,78,0.05);
+  --cover-1: linear-gradient(135deg,#2d8a4e,#4caf50);
+  --cover-2: linear-gradient(135deg,#1b5e20,#388e3c);
+  --cover-3: linear-gradient(135deg,#00796b,#26a69a);
+}
+[data-theme="dark"] {
+  --bg: #111c15; --bg-alt: #1a2a1e;
+  --glass-bg: rgba(17,28,21,0.68); --glass-border: rgba(100,160,120,0.1);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.4),0 2px 8px rgba(0,0,0,0.25);
+  --text: #d8e8dc; --text-secondary: #8aaa95; --text-muted: #3d5a46;
+  --accent: #4caf50; --accent-soft: rgba(76,175,80,0.12); --accent-light: rgba(76,175,80,0.18);
+  --timeline: #2a3a2e; --tag-bg: rgba(76,175,80,0.12); --tag-text: #81c784;
+  --card-hover: rgba(26,42,30,0.85); --divider: rgba(100,160,120,0.08);
+  --quote-bg: rgba(76,175,80,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.3s,color 0.3s;line-height:1.65;}
+a{color:var(--accent);text-decoration:none;}
+
+.bg-decor{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-decor .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.2;}
+.bg-decor .orb:nth-child(1){width:450px;height:450px;background:#81c784;top:-120px;right:-80px;animation:float 9s infinite;}
+.bg-decor .orb:nth-child(2){width:380px;height:380px;background:#a5d6a7;bottom:-100px;left:-100px;animation:float 11s infinite reverse;}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+[data-theme="dark"] .bg-decor .orb{opacity:0.08;}
+
+.notch-nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;}
+.notch-nav nav{display:flex;align-items:center;gap:2px;padding:6px 8px;background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-border);border-radius:28px;box-shadow:var(--glass-shadow);}
+.notch-nav a{padding:8px 18px;border-radius:22px;font-size:0.88rem;color:var(--text-secondary);text-decoration:none;font-weight:500;transition:all 0.2s;white-space:nowrap;}
+.notch-nav a:hover{color:var(--text);background:var(--accent-soft);}
+.notch-nav a.active{background:var(--accent);color:#fff;}
+.notch-nav .sep{width:1px;height:20px;background:var(--divider);margin:0 6px;}
+.notch-nav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--divider);background:none;color:var(--text-secondary);cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.notch-nav button:hover{background:var(--accent-soft);color:var(--text);}
+
+/* ═══ 宽幅单栏 ═══ */
+.main{max-width:900px;margin:0 auto;padding:100px 24px 60px;position:relative;z-index:10;}
+
+.glass-card{background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-border);border-radius:20px;box-shadow:var(--glass-shadow);padding:2rem;margin-bottom:1.5rem;transition:background 0.2s;}
+.glass-card:hover{background:var(--card-hover);}
+
+/* ── 首页自我介绍 ── */
+.profile{display:flex;gap:2.5rem;align-items:center;}
+.profile-avatar{width:120px;height:120px;border-radius:22px;flex-shrink:0;background:linear-gradient(135deg,#2d8a4e,#4caf50);display:flex;align-items:center;justify-content:center;color:#fff;font-size:2.8rem;box-shadow:0 8px 24px rgba(45,138,78,0.2);}
+.profile-info{flex:1;}
+.profile-info h1{font-size:1.7rem;font-weight:700;margin-bottom:0.25rem;letter-spacing:-0.02em;}
+.profile-info .handle{font-size:0.9rem;color:var(--accent);margin-bottom:0.75rem;font-weight:500;}
+.profile-info p{color:var(--text-secondary);font-size:0.95rem;line-height:1.75;}
+@media(max-width:600px){.profile{flex-direction:column;text-align:center;}}
+
+/* ── 装饰：每日一句 ── */
+.daily-quote{
+  padding:1.5rem 2rem;margin-bottom:1.5rem;border-radius:16px;
+  background:var(--quote-bg);border:1px solid var(--glass-border);
+  text-align:center;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.daily-quote .text{font-size:1.05rem;color:var(--text);font-style:italic;margin-bottom:0.5rem;line-height:1.6;}
+.daily-quote .author{font-size:0.78rem;color:var(--text-muted);}
+
+/* ── 状态行 ── */
+.status-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:600px){.status-row{grid-template-columns:1fr;}}
+.status-item{text-align:center;padding:1.5rem 1rem;border-radius:16px;background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);}
+.status-item .num{font-size:2rem;font-weight:800;color:var(--accent);}
+.status-item .label{font-size:0.78rem;color:var(--text-muted);margin-top:0.25rem;}
+
+/* ── 时间线 ── */
+.timeline-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin:2rem 0 1.25rem;display:flex;align-items:center;gap:0.5rem;}
+.timeline-title::after{content:'';flex:1;height:1px;background:var(--divider);}
+.timeline{position:relative;padding-left:32px;}
+.timeline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--timeline);}
+.timeline-item{position:relative;margin-bottom:1.75rem;}
+.timeline-item::before{content:'';position:absolute;left:-30px;top:10px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid var(--glass-bg);box-shadow:0 0 0 2px var(--accent-soft);}
+.timeline-item .date{font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-bottom:0.35rem;}
+.timeline-item .card{background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:14px;padding:1.25rem;transition:all 0.2s;}
+.timeline-item .card:hover{background:var(--card-hover);transform:translateX(6px);}
+.timeline-item .card-title{font-size:1.05rem;font-weight:600;margin-bottom:0.35rem;color:var(--text);}
+.timeline-item .card-desc{font-size:0.84rem;color:var(--text-secondary);line-height:1.65;}
+
+/* ═══ 文章页 - 标签筛选横条 + 两栏卡片 ═══ */
+.tag-bar{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem;}
+.tag-bar a{font-size:0.78rem;padding:0.4rem 1rem;border-radius:10px;background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--glass-border);color:var(--text-secondary);transition:all 0.2s;}
+.tag-bar a:hover{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
+.tag-bar a.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* 文章网格 */
+.articles-grid{display:grid;grid-template-columns:1fr;gap:1.25rem;}
+@media(min-width:700px){.articles-grid{grid-template-columns:1fr 1fr;}}
+
+/* 文章卡片（纵向，带封面图） */
+.article-card-v{
+  border-radius:16px;overflow:hidden;
+  background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+  transition:all 0.2s;display:flex;flex-direction:column;
+}
+.article-card-v:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.06);}
+.article-card-v .cover{
+  height:180px;background-size:cover;background-position:center;
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:2rem;
+}
+.article-card-v .body{padding:1.5rem;flex:1;display:flex;flex-direction:column;}
+.article-card-v .title{font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;color:var(--text);}
+.article-card-v .meta{display:flex;gap:0.75rem;flex-wrap:wrap;font-size:0.76rem;color:var(--text-muted);margin-bottom:0.5rem;}
+.article-card-v .desc{font-size:0.84rem;color:var(--text-secondary);line-height:1.7;flex:1;margin-bottom:0.75rem;}
+.article-card-v .tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.article-card-v .tags span{font-size:0.68rem;padding:0.15rem 0.55rem;border-radius:6px;background:var(--tag-bg);color:var(--tag-text);font-weight:500;}
+
+/* 统计栏（文章页顶部） */
+.stats-bar{display:flex;gap:1.5rem;align-items:center;font-size:0.8rem;color:var(--text-muted);margin-bottom:1.25rem;}
+.stats-bar span{color:var(--accent);font-weight:600;}
+
+.search-box{width:100%;padding:0.75rem 1rem;border:1px solid var(--glass-border);border-radius:14px;background:var(--glass-bg);color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;margin-bottom:1.25rem;transition:border-color 0.2s;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
+.search-box:focus{border-color:var(--accent);}.search-box::placeholder{color:var(--text-muted);}
+
+/* ═══ 关于页 ═══ */
+.about-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:600px){.about-grid{grid-template-columns:repeat(2,1fr);}}
+.about-grid .stat{text-align:center;padding:1.5rem 1rem;border-radius:14px;background:var(--glass-bg);border:1px solid var(--glass-border);}
+.about-grid .stat .num{font-size:1.6rem;font-weight:800;color:var(--accent);}
+.about-grid .stat .label{font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;}
+
+/* 友链瀑布 */
+.friend-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;margin-top:1rem;}
+.friend-card{
+  padding:1.25rem;border-radius:14px;text-align:center;
+  background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);transition:all 0.2s;
+}
+.friend-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.04);}
+.friend-card img{width:52px;height:52px;border-radius:50%;background:var(--accent-soft);margin:0 auto 0.75rem;display:block;}
+.friend-card .name{font-weight:600;font-size:0.9rem;color:var(--text);}
+.friend-card .url{font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.footer{text-align:center;padding:2rem;color:var(--text-muted);font-size:0.78rem;}
+.page{display:none;}.page.active{display:block;}
+</style>
+</head>
+<body>
+
+<div class="bg-decor"><div class="orb"></div><div class="orb"></div></div>
+
+<div class="notch-nav">
+  <nav>
+    <a href="#" onclick="showPage('home',this)" class="active">首页</a>
+    <a href="#" onclick="showPage('articles',this)">文章</a>
+    <a href="#" onclick="showPage('about',this)">关于</a>
+    <span class="sep"></span>
+    <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button onclick="alert('语言')">中</button>
+  </nav>
+</div>
+
+<div class="main">
+
+  <!-- ═══ 首页 ═══ -->
+  <div id="home" class="page active">
+    <div class="glass-card profile">
+      <div class="profile-avatar">👤</div>
+      <div class="profile-info">
+        <h1>NAPHthalene</h1>
+        <div class="handle">@naph130 · 前端开发者</div>
+        <p>热爱探索前端技术的前沿边界。记录 Vue、TypeScript、CSS 等技术的学习与实践。像植物一样安静生长，用代码构建数字世界的生态。</p>
+      </div>
+    </div>
+
+    <!-- 每日一句 -->
+    <div class="daily-quote">
+      <div class="text">"代码如森林，每一行都是生长的年轮。好的架构让根扎得深，好的设计让叶展得开。"</div>
+      <div class="author">—— 今日随想</div>
+    </div>
+
+    <!-- 状态 -->
+    <div class="status-row">
+      <div class="status-item"><div class="num">3</div><div class="label">文章数</div></div>
+      <div class="status-item"><div class="num">4,200</div><div class="label">总字数</div></div>
+      <div class="status-item"><div class="num">2</div><div class="label">标签分类</div></div>
+    </div>
+
+    <!-- 时间线 -->
+    <div class="timeline-title">📡 最新动态</div>
+    <div class="timeline">
+      <div class="timeline-item"><div class="date">2024 · 06 · 15</div><div class="card"><div class="card-title">理解 Vue 3 组合式 API 的设计思想</div><div class="card-desc">深入探讨 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变。</div></div></div>
+      <div class="timeline-item"><div class="date">2024 · 03 · 20</div><div class="card"><div class="card-title">从零搭建 TypeScript 全栈项目</div><div class="card-desc">记录一次完整的 TS 全栈项目搭建过程，涵盖 monorepo、共享类型等实践。</div></div></div>
+      <div class="timeline-item"><div class="date">2024 · 01 · 08</div><div class="card"><div class="card-title">CSS Container Queries 实战指南</div><div class="card-desc">Container Queries 在所有主流浏览器得到支持，通过案例演示用法。</div></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ 文章页 ═══ -->
+  <div id="articles" class="page">
+    <!-- 统计条 -->
+    <div class="stats-bar">📄 共 <span>3</span> 篇 · 📝 <span>4,200</span> 字 · 🕐 约 <span>26</span> 分钟</div>
+    <input class="search-box" type="text" placeholder="搜索文章..." />
+
+    <!-- 横向标签筛选 -->
+    <div class="tag-bar">
+      <a href="#" class="active">全部</a>
+      <a href="#">Vue</a>
+      <a href="#">TypeScript</a>
+      <a href="#">CSS</a>
+      <a href="#">工程化</a>
+      <a href="#">Node.js</a>
+    </div>
+
+    <!-- 两栏卡片 -->
+    <div class="articles-grid">
+      <article class="article-card-v">
+        <div class="cover" style="background:var(--cover-1);">Vue</div>
+        <div class="body"><h3 class="title">理解 Vue 3 组合式 API 的设计思想</h3><div class="meta"><span>📅 2024-06-15</span><span>🕐 8 分钟</span><span>📝 2.4k 字</span></div><p class="desc">深入探讨 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变及最佳实践。</p><div class="tags"><span>Vue</span><span>TypeScript</span></div></div>
+      </article>
+      <article class="article-card-v">
+        <div class="cover" style="background:var(--cover-2);">TS</div>
+        <div class="body"><h3 class="title">从零搭建 TypeScript 全栈项目</h3><div class="meta"><span>📅 2024-03-20</span><span>🕐 12 分钟</span><span>📝 3.6k 字</span></div><p class="desc">记录一次完整的 TypeScript 全栈项目搭建过程，涵盖 monorepo、共享类型等工程化实践。</p><div class="tags"><span>TypeScript</span><span>Node.js</span></div></div>
+      </article>
+      <article class="article-card-v">
+        <div class="cover" style="background:var(--cover-3);">CSS</div>
+        <div class="body"><h3 class="title">CSS Container Queries 实战指南</h3><div class="meta"><span>📅 2024-01-08</span><span>🕐 6 分钟</span><span>📝 1.8k 字</span></div><p class="desc">Container Queries 在全主流浏览器得到支持，通过案例演示实际用法。</p><div class="tags"><span>CSS</span><span>响应式</span></div></div>
+      </article>
+    </div>
+  </div>
+
+  <!-- ═══ 关于页 ═══ -->
+  <div id="about" class="page">
+    <div class="glass-card">
+      <h2 style="font-size:1.3rem;margin-bottom:0.75rem;">关于我</h2>
+      <p style="color:var(--text-secondary);line-height:1.8;font-size:0.95rem;">一个热爱技术与设计的全栈开发者。工作涉及 Vue、TypeScript、Node.js 等技术栈。<br/><br/>这个博客使用纯客户端渲染架构，所有内容以 Markdown 形式存储，通过 GitHub Pages 部署。</p>
+    </div>
+    <div class="about-grid">
+      <div class="stat"><div class="num">3</div><div class="label">文章</div></div>
+      <div class="stat"><div class="num">2</div><div class="label">标签</div></div>
+      <div class="stat"><div class="num">1</div><div class="label">项目</div></div>
+      <div class="stat"><div class="num">∞</div><div class="label">持续</div></div>
+    </div>
+    <div class="glass-card">
+      <h2 style="font-size:1.15rem;margin-bottom:1rem;">🔗 友情链接</h2>
+      <div class="friend-links">
+        <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Crect fill='%234caf50' width='52' height='52'/%3E%3Ctext fill='white' x='26' y='30' text-anchor='middle' font-size='18'%3EA%3C/text%3E%3C/svg%3E" alt=""><div class="name">Alice's Blog</div><div class="url">alice.dev</div></a>
+        <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Crect fill='%232196f3' width='52' height='52'/%3E%3Ctext fill='white' x='26' y='30' text-anchor='middle' font-size='18'%3EB%3C/text%3E%3C/svg%3E" alt=""><div class="name">Bob 技术笔记</div><div class="url">bob.tech</div></a>
+        <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Crect fill='%23ff9800' width='52' height='52'/%3E%3Ctext fill='white' x='26' y='30' text-anchor='middle' font-size='18'%3EC%3C/text%3E%3C/svg%3E" alt=""><div class="name">Carol 设计站</div><div class="url">carol.design</div></a>
+        <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Crect fill='%239c27b0' width='52' height='52'/%3E%3Ctext fill='white' x='26' y='30' text-anchor='middle' font-size='18'%3ED%3C/text%3E%3C/svg%3E" alt=""><div class="name">David 全栈</div><div class="url">david.io</div></a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">布局 C · 卡片瀑布 · forest-moss · NAPH130 Blog</footer>
+
+<script>
+function showPage(id,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.notch-nav a').forEach(a=>a.classList.remove('active'));el.classList.add('active');}
+function toggleTheme(){var h=document.documentElement,t=h.dataset.theme,b=document.getElementById('themeBtn');h.dataset.theme=t==='light'?'dark':'light';b.textContent=t==='light'?'☀️':'🌙';}
+</script>
+</body>
+</html>

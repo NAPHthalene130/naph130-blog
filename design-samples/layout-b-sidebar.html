@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>布局 B · 侧栏主导</title>
+<style>
+:root {
+  --bg: #f2f7f4; --bg-alt: #e8f0ea;
+  --glass-bg: rgba(255,255,255,0.52); --glass-border: rgba(100,160,120,0.22);
+  --glass-shadow: 0 8px 32px rgba(40,80,50,0.05),0 2px 8px rgba(40,80,50,0.03);
+  --text: #1e3326; --text-secondary: #4a6656; --text-muted: #8aaa95;
+  --accent: #2d8a4e; --accent-soft: rgba(45,138,78,0.08); --accent-light: rgba(45,138,78,0.15);
+  --accent-bright: #22c55e;
+  --timeline: #c5daca; --tag-bg: rgba(45,138,78,0.08); --tag-text: #2d8a4e;
+  --card-hover: rgba(255,255,255,0.75); --divider: rgba(40,80,50,0.06);
+  --cover-1: linear-gradient(135deg,#2d8a4e,#4caf50);
+  --cover-2: linear-gradient(135deg,#1b5e20,#388e3c);
+  --cover-3: linear-gradient(135deg,#00796b,#26a69a);
+}
+[data-theme="dark"] {
+  --bg: #111c15; --bg-alt: #1a2a1e;
+  --glass-bg: rgba(17,28,21,0.68); --glass-border: rgba(100,160,120,0.1);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.4),0 2px 8px rgba(0,0,0,0.25);
+  --text: #d8e8dc; --text-secondary: #8aaa95; --text-muted: #3d5a46;
+  --accent: #4caf50; --accent-soft: rgba(76,175,80,0.12); --accent-light: rgba(76,175,80,0.18);
+  --accent-bright: #4ade80;
+  --timeline: #2a3a2e; --tag-bg: rgba(76,175,80,0.12); --tag-text: #81c784;
+  --card-hover: rgba(26,42,30,0.85); --divider: rgba(100,160,120,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.3s,color 0.3s;line-height:1.65;}
+a{color:var(--accent);text-decoration:none;}
+
+.bg-decor{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-decor .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.2;}
+.bg-decor .orb:nth-child(1){width:450px;height:450px;background:#81c784;top:-120px;right:-80px;animation:float 9s ease-in-out infinite;}
+.bg-decor .orb:nth-child(2){width:380px;height:380px;background:#a5d6a7;bottom:-100px;left:-100px;animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+[data-theme="dark"] .bg-decor .orb{opacity:0.08;}
+
+/* 刘海导航 */
+.notch-nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;}
+.notch-nav nav{display:flex;align-items:center;gap:2px;padding:6px 8px;background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-border);border-radius:28px;box-shadow:var(--glass-shadow);}
+.notch-nav a{padding:8px 18px;border-radius:22px;font-size:0.88rem;color:var(--text-secondary);text-decoration:none;font-weight:500;transition:all 0.2s;white-space:nowrap;}
+.notch-nav a:hover{color:var(--text);background:var(--accent-soft);}
+.notch-nav a.active{background:var(--accent);color:#fff;}
+.notch-nav .sep{width:1px;height:20px;background:var(--divider);margin:0 6px;}
+.notch-nav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--divider);background:none;color:var(--text-secondary);cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.notch-nav button:hover{background:var(--accent-soft);color:var(--text);}
+
+/* ═══ 双栏主布局 ═══ */
+.main{max-width:1050px;margin:0 auto;padding:100px 24px 60px;position:relative;z-index:10;display:flex;gap:1.5rem;align-items:start;}
+.main-sidebar{width:240px;flex-shrink:0;position:sticky;top:100px;}
+.main-content{flex:1;min-width:0;}
+@media(max-width:850px){.main{flex-direction:column;}.main-sidebar{width:100%;position:static;}}
+
+/* 侧栏卡片 */
+.side-card{
+  background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border);border-radius:16px;box-shadow:var(--glass-shadow);
+  padding:1.25rem;margin-bottom:1rem;
+}
+.side-card h3{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.75rem;}
+
+/* 侧栏 - 个人卡片 */
+.side-profile{text-align:center;}
+.side-profile .avt{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#2d8a4e,#4caf50);margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;}
+.side-profile .name{font-weight:700;font-size:1rem;color:var(--text);}
+.side-profile .handle{font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem;}
+.side-profile .bio{font-size:0.78rem;color:var(--text-secondary);margin-top:0.75rem;line-height:1.6;}
+.side-profile .icons{display:flex;justify-content:center;gap:0.5rem;margin-top:0.75rem;}
+.side-profile .icons a{font-size:0.7rem;padding:0.25rem 0.6rem;border-radius:8px;background:var(--accent-soft);color:var(--accent);}
+
+/* 侧栏 - 导航 */
+.side-nav-links{display:flex;flex-direction:column;gap:0.2rem;}
+.side-nav-links a{font-size:0.84rem;padding:0.5rem 0.75rem;border-radius:10px;color:var(--text-secondary);transition:all 0.15s;}
+.side-nav-links a:hover{background:var(--accent-soft);color:var(--accent);}
+.side-nav-links a.active{background:var(--accent);color:#fff;}
+
+/* 内容卡片 */
+.glass-card{background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-border);border-radius:20px;box-shadow:var(--glass-shadow);padding:2rem;margin-bottom:1.5rem;transition:background 0.2s;}
+.glass-card:hover{background:var(--card-hover);}
+
+/* ── 首页 - 精选文章横幅 ── */
+.featured-banner{
+  border-radius:18px;overflow:hidden;display:flex;min-height:200px;
+  background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border);margin-bottom:1.5rem;
+}
+.featured-banner .banner-img{
+  width:300px;min-width:300px;background:linear-gradient(135deg,#2d8a4e,#4caf50);
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:3rem;
+}
+.featured-banner .banner-body{padding:2rem;display:flex;flex-direction:column;justify-content:center;}
+.featured-banner .pin{font-size:0.7rem;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.35rem;}
+.featured-banner .banner-title{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);}
+.featured-banner .banner-desc{font-size:0.9rem;color:var(--text-secondary);line-height:1.7;}
+.featured-banner .banner-meta{font-size:0.78rem;color:var(--text-muted);margin-top:0.75rem;}
+@media(max-width:700px){.featured-banner{flex-direction:column;}.featured-banner .banner-img{width:100%;height:140px;}}
+
+/* ── 时间线（带图标装饰） ── */
+.timeline-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin:2rem 0 1.25rem;}
+.timeline{position:relative;padding-left:36px;}
+.timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:var(--timeline);}
+.timeline-item{position:relative;margin-bottom:1.75rem;}
+.timeline-item .dot{
+  position:absolute;left:-30px;top:6px;
+  width:16px;height:16px;border-radius:6px;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+}
+.timeline-item .dot::after{
+  content:'';width:6px;height:6px;background:#fff;border-radius:2px;
+}
+.timeline-item .date{font-size:0.72rem;color:var(--text-muted);font-weight:500;letter-spacing:0.04em;margin-bottom:0.35rem;}
+.timeline-item .card{background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:14px;padding:1.25rem;transition:all 0.2s;}
+.timeline-item .card:hover{background:var(--card-hover);transform:translateX(6px);}
+.timeline-item .card-title{font-size:1.05rem;font-weight:600;margin-bottom:0.35rem;color:var(--text);}
+.timeline-item .card-desc{font-size:0.84rem;color:var(--text-secondary);line-height:1.65;}
+
+/* ── 文章卡片（横向方形封面 + 右侧信息） ── */
+.article-card-h{
+  border-radius:16px;overflow:hidden;display:flex;
+  background:var(--glass-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+  margin-bottom:1.25rem;transition:all 0.2s;
+}
+.article-card-h:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.06);}
+.article-card-h .cover-square{
+  width:180px;min-width:180px;background-size:cover;background-position:center;
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,0.5);font-size:1.8rem;
+}
+@media(max-width:550px){.article-card-h{flex-direction:column;}.article-card-h .cover-square{width:100%;height:150px;}}
+.article-card-h .body{padding:1.5rem;flex:1;}
+.article-card-h .title{font-size:1.15rem;font-weight:700;margin-bottom:0.35rem;color:var(--text);}
+.article-card-h .meta{display:flex;gap:1rem;flex-wrap:wrap;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.5rem;}
+.article-card-h .desc{font-size:0.88rem;color:var(--text-secondary);line-height:1.65;margin-bottom:0.75rem;}
+.article-card-h .tags{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.article-card-h .tags span{font-size:0.7rem;padding:0.2rem 0.6rem;border-radius:6px;background:var(--tag-bg);color:var(--tag-text);font-weight:500;}
+
+/* 文章页侧栏额外样式 */
+.tag-chips{display:flex;flex-direction:column;gap:0.3rem;}
+.tag-chips a{font-size:0.82rem;padding:0.45rem 0.75rem;border-radius:10px;color:var(--text-secondary);transition:all 0.15s;display:flex;justify-content:space-between;}
+.tag-chips a:hover{background:var(--accent-soft);color:var(--accent);}
+.tag-chips a.active{background:var(--accent);color:#fff;}
+.tag-chips a .ct{font-size:0.7rem;opacity:0.6;}
+
+.stats-list{font-size:0.82rem;color:var(--text-secondary);line-height:2.2;}
+.stats-list span{color:var(--accent);font-weight:600;}
+
+.search-box{width:100%;padding:0.75rem 1rem;border:1px solid var(--glass-border);border-radius:14px;background:var(--glass-bg);color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;margin-bottom:1.25rem;transition:border-color 0.2s;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
+.search-box:focus{border-color:var(--accent);}.search-box::placeholder{color:var(--text-muted);}
+
+/* 友链 */
+.friend-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.75rem;margin-top:1rem;}
+.friend-card{
+  display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;border-radius:14px;
+  background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);transition:all 0.2s;
+}
+.friend-card:hover{transform:translateY(-2px);}
+.friend-card img{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);flex-shrink:0;}
+.friend-card .info{flex:1;min-width:0;}
+.friend-card .info .name{font-weight:600;font-size:0.9rem;color:var(--text);}
+.friend-card .info .url{font-size:0.72rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.footer{text-align:center;padding:2rem;color:var(--text-muted);font-size:0.78rem;}
+.page{display:none;}.page.active{display:block;}
+</style>
+</head>
+<body>
+
+<div class="bg-decor"><div class="orb"></div><div class="orb"></div></div>
+
+<div class="notch-nav">
+  <nav>
+    <a href="#" onclick="showPage('home',this)" class="active">首页</a>
+    <a href="#" onclick="showPage('articles',this)">文章</a>
+    <a href="#" onclick="showPage('about',this)">关于</a>
+    <span class="sep"></span>
+    <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button onclick="alert('语言切换')">中</button>
+  </nav>
+</div>
+
+<div class="main">
+  <!-- 左侧持久侧栏 -->
+  <aside class="main-sidebar">
+    <div class="side-card side-profile">
+      <div class="avt">👤</div>
+      <div class="name">NAPHthalene</div>
+      <div class="handle">@naph130</div>
+      <div class="bio">前端开发者 · Vue / TS / Node.js</div>
+      <div class="icons"><a href="#">🐙</a><a href="#">📧</a><a href="#">📡</a></div>
+    </div>
+
+    <div class="side-card">
+      <h3>📂 分类</h3>
+      <div class="tag-chips">
+        <a href="#" class="active">全部 <span class="ct">3</span></a>
+        <a href="#">Vue <span class="ct">1</span></a>
+        <a href="#">TypeScript <span class="ct">2</span></a>
+        <a href="#">CSS <span class="ct">1</span></a>
+        <a href="#">工程化 <span class="ct">1</span></a>
+      </div>
+    </div>
+
+    <div class="side-card">
+      <h3>📊 统计</h3>
+      <div class="stats-list">
+        <div>📄 文章 <span>3</span></div>
+        <div>📝 字数 <span>4.2k</span></div>
+        <div>🏷️ 标签 <span>2</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 右侧内容区 -->
+  <div class="main-content">
+
+    <!-- ═══ 首页 ═══ -->
+    <div id="home" class="page active">
+      <!-- 精选横幅 -->
+      <div class="featured-banner">
+        <div class="banner-img">📌</div>
+        <div class="banner-body">
+          <div class="pin">📌 置顶推荐</div>
+          <div class="banner-title">理解 Vue 3 组合式 API 的设计思想</div>
+          <div class="banner-desc">深入探讨 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变，以及在实际项目中的最佳实践。</div>
+          <div class="banner-meta">2024-06-15 · 8 分钟 · Vue · TypeScript</div>
+        </div>
+      </div>
+
+      <!-- 时间线 -->
+      <div class="timeline-title">📡 最新动态</div>
+      <div class="timeline">
+        <div class="timeline-item"><div class="dot"></div><div class="date">2024 · 06 · 15</div><div class="card"><div class="card-title">理解 Vue 3 组合式 API 的设计思想</div><div class="card-desc">深入探讨 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变及最佳实践。</div></div></div>
+        <div class="timeline-item"><div class="dot"></div><div class="date">2024 · 03 · 20</div><div class="card"><div class="card-title">从零搭建 TypeScript 全栈项目</div><div class="card-desc">记录一次完整的 TS 全栈项目搭建过程，涵盖 monorepo、共享类型等实践。</div></div></div>
+        <div class="timeline-item"><div class="dot"></div><div class="date">2024 · 01 · 08</div><div class="card"><div class="card-title">CSS Container Queries 实战指南</div><div class="card-desc">Container Queries 在所有主流浏览器得到支持，通过案例演示用法。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ 文章页 ═══ -->
+    <div id="articles" class="page">
+      <input class="search-box" type="text" placeholder="搜索文章..." />
+      <article class="article-card-h">
+        <div class="cover-square" style="background:var(--cover-1);">Vue</div>
+        <div class="body"><h3 class="title">理解 Vue 3 组合式 API 的设计思想</h3><div class="meta"><span>📅 2024-06-15</span><span>🕐 8 分钟</span><span>📝 2,400 字</span></div><p class="desc">深入探讨 Vue 3 Composition API 背后的设计哲学，从 Options API 到 Composition API 的演变。</p><div class="tags"><span>Vue</span><span>TypeScript</span><span>架构</span></div></div>
+      </article>
+      <article class="article-card-h">
+        <div class="cover-square" style="background:var(--cover-2);">TS</div>
+        <div class="body"><h3 class="title">从零搭建 TypeScript 全栈项目</h3><div class="meta"><span>📅 2024-03-20</span><span>🕐 12 分钟</span><span>📝 3,600 字</span></div><p class="desc">记录一次完整的 TypeScript 全栈项目搭建过程，涵盖 monorepo、共享类型等工程化实践。</p><div class="tags"><span>TypeScript</span><span>Node.js</span></div></div>
+      </article>
+      <article class="article-card-h">
+        <div class="cover-square" style="background:var(--cover-3);">CSS</div>
+        <div class="body"><h3 class="title">CSS Container Queries 实战指南</h3><div class="meta"><span>📅 2024-01-08</span><span>🕐 6 分钟</span><span>📝 1,800 字</span></div><p class="desc">Container Queries 终于在所有主流浏览器中得到支持，通过实际案例演示它的用法。</p><div class="tags"><span>CSS</span><span>响应式</span></div></div>
+      </article>
+    </div>
+
+    <!-- ═══ 关于页 ═══ -->
+    <div id="about" class="page">
+      <div class="glass-card">
+        <h2 style="font-size:1.3rem;margin-bottom:0.75rem;">关于我</h2>
+        <p style="color:var(--text-secondary);line-height:1.8;font-size:0.95rem;">一个热爱技术与设计的全栈开发者。工作涉及 Vue、TypeScript、Node.js 等技术栈。<br/><br/>这个博客使用纯客户端渲染架构，Markdown 内容管理，通过 GitHub Pages 自动部署。</p>
+      </div>
+      <div class="glass-card">
+        <h2 style="font-size:1.15rem;margin-bottom:1rem;">🔗 友情链接</h2>
+        <div class="friend-links">
+          <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect fill='%234caf50' width='44' height='44'/%3E%3Ctext fill='white' x='22' y='26' text-anchor='middle' font-size='16'%3EA%3C/text%3E%3C/svg%3E" alt=""><div class="info"><div class="name">Alice's Blog</div><div class="url">https://alice.dev</div></div></a>
+          <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect fill='%232196f3' width='44' height='44'/%3E%3Ctext fill='white' x='22' y='26' text-anchor='middle' font-size='16'%3EB%3C/text%3E%3C/svg%3E" alt=""><div class="info"><div class="name">Bob 技术笔记</div><div class="url">https://bob.tech/blog</div></div></a>
+          <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect fill='%23ff9800' width='44' height='44'/%3E%3Ctext fill='white' x='22' y='26' text-anchor='middle' font-size='16'%3EC%3C/text%3E%3C/svg%3E" alt=""><div class="info"><div class="name">Carol 设计站</div><div class="url">https://carol.design</div></div></a>
+          <a href="#" class="friend-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect fill='%239c27b0' width='44' height='44'/%3E%3Ctext fill='white' x='22' y='26' text-anchor='middle' font-size='16'%3ED%3C/text%3E%3C/svg%3E" alt=""><div class="info"><div class="name">David 全栈之路</div><div class="url">https://david.io</div></div></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">布局 B · 侧栏主导 · forest-moss · NAPH130 Blog</footer>
+
+<script>
+function showPage(id,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.notch-nav a').forEach(a=>a.classList.remove('active'));el.classList.add('active');}
+function toggleTheme(){var h=document.documentElement,t=h.dataset.theme,b=document.getElementById('themeBtn');h.dataset.theme=t==='light'?'dark':'light';b.textContent=t==='light'?'☀️':'🌙';}
+</script>
+</body>
+</html>
