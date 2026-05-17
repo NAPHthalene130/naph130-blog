@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClock } from '@/composables/useClock'
 
@@ -9,6 +9,10 @@ const BASE = import.meta.env.BASE_URL
 
 const avatarLoaded = ref(false)
 const avatarUrl = `${BASE}assets/avatar.jpg`
+
+const avatarStyle = computed<Record<string, string>>(() => ({
+  background: avatarLoaded.value ? 'transparent' : 'linear-gradient(135deg, #2d8a4e, #4caf50)',
+}))
 
 const props = defineProps<{
   categories: { name: string; count: number }[]
@@ -25,7 +29,7 @@ const emit = defineEmits<{ 'select-category': [name: string] }>()
     <div class="flex flex-col gap-4">
       <!-- 个人卡片 -->
       <div class="glass-card text-center p-6">
-      <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl overflow-hidden shadow-lg" :style="{ background: avatarLoaded ? 'transparent' : 'linear-gradient(135deg, #2d8a4e, #4caf50)', boxShadow: '0 4px 16px rgba(45,138,78,0.25)' }">
+      <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl overflow-hidden shadow-lg" :style="avatarStyle">
         <img
           :src="avatarUrl"
           class="w-full h-full object-cover"
