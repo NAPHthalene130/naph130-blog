@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { usePosts } from '../composables/usePosts'
+import { useCategoryFilter } from '../composables/useCategoryFilter'
 import AppHeader from '../components/AppHeader.vue'
 import AppSidebar from '../components/AppSidebar.vue'
 import BackgroundEffect from '../components/BackgroundEffect.vue'
@@ -10,10 +11,10 @@ import BackgroundEffect from '../components/BackgroundEffect.vue'
 const { t, locale } = useI18n()
 const route = useRoute()
 const { posts, categories, allTags, stats } = usePosts()
+const { activeCategory } = useCategoryFilter()
 
-const activeCategory = ref('all')
-
-const showSidebar = computed(() => route.name !== 'post')
+// 侧栏始终显示
+const showSidebar = computed(() => true)
 
 function onSelectCategory(cat: string) {
   activeCategory.value = cat
@@ -37,7 +38,7 @@ function onSelectCategory(cat: string) {
       <div class="app-content">
         <RouterView v-slot="{ Component }">
           <Transition name="page" mode="out-in">
-            <component :is="Component" :active-category="activeCategory" />
+            <component :is="Component" />
           </Transition>
         </RouterView>
       </div>
