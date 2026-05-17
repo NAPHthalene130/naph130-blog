@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { usePosts } from '../composables/usePosts'
-import { useCategoryFilter } from '../composables/useCategoryFilter'
 import AppHeader from '../components/AppHeader.vue'
 import AppSidebar from '../components/AppSidebar.vue'
 import BackgroundEffect from '../components/BackgroundEffect.vue'
+import { usePosts } from '../composables/usePosts'
+import { useCategoryFilter } from '../composables/useCategoryFilter'
 
-const { t, locale } = useI18n()
-const { posts, categories, allTags, stats } = usePosts()
+const { posts, categories, allTags } = usePosts()
 const { activeCategory } = useCategoryFilter()
 
 function onSelectCategory(cat: string) {
@@ -30,27 +28,8 @@ function onSelectCategory(cat: string) {
         @select-category="onSelectCategory"
       />
       <div class="app-content">
-        <RouterView v-slot="{ Component }">
-          <Transition name="page" mode="out-in">
-            <component :is="Component" />
-          </Transition>
-        </RouterView>
+        <RouterView />
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(-12px);
-}
-</style>
