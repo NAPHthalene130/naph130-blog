@@ -10,15 +10,4 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  build: {
-    target: 'esnext',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vue-vendor': ['vue', 'vue-router', 'vue-i18n'],
-          'utils-vendor': ['markdown-it', 'highlight.js', 'fuse.js'],
-        },
-      },
-    },
-  },
 })
