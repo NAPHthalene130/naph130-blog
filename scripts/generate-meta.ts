@@ -11,6 +11,7 @@ interface PostMeta {
   title: string
   date: string
   updated?: string
+  category: string
   description: string
   tags: string[]
   pinned: boolean
@@ -30,28 +31,23 @@ function parseFrontmatter(raw: string): { meta: Record<string, any>; body: strin
   const yaml = match[1]
   const body = match[2] || ''
   const meta: Record<string, any> = {}
-
   let currentArrayKey: string | null = null
+
   for (const line of yaml.split('\n')) {
     const trimmed = line.trim()
     if (!trimmed) continue
-    // Array item
     if (trimmed.startsWith('- ') && currentArrayKey) {
       if (!Array.isArray(meta[currentArrayKey])) meta[currentArrayKey] = []
       meta[currentArrayKey].push(trimmed.slice(2).trim())
       continue
     }
-    // Key-value
     const colonIdx = trimmed.indexOf(':')
     if (colonIdx === -1) continue
     const key = trimmed.slice(0, colonIdx).trim()
     let value: any = trimmed.slice(colonIdx + 1).trim()
     if (value === 'true') value = true
     else if (value === 'false') value = false
-    else if (value === '') {
-      currentArrayKey = key
-      continue
-    }
+    else if (value === '') { currentArrayKey = key; continue }
     currentArrayKey = null
     meta[key] = value
   }
@@ -62,10 +58,7 @@ function countWords(text: string): number {
   const stripped = text.replace(/<[^>]+>/g, '').trim()
   if (!stripped) return 0
   const chineseChars = (stripped.match(/[\u4e00-\u9fff]/g) || []).length
-  const englishWords = stripped
-    .replace(/[\u4e00-\u9fff]/g, '')
-    .split(/\s+/)
-    .filter(Boolean).length
+  const englishWords = stripped.replace(/[\u4e00-\u9fff]/g, '').split(/\s+/).filter(Boolean).length
   return chineseChars + englishWords
 }
 
@@ -96,6 +89,7 @@ for (const locale of LOCALES) {
       title: meta.title || slug,
       date: meta.date || '',
       updated: meta.updated || undefined,
+      category: meta.category || '',
       description: meta.description || '',
       tags: meta.tags || [],
       pinned: meta.pinned === true,

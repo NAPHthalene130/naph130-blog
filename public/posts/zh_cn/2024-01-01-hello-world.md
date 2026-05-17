@@ -1,8 +1,10 @@
 ---
 title: 你好，世界
 date: 2024-01-01
+category: 前端
 description: 这是我的第一篇博客文章，记录了这个静态博客项目的诞生。
 tags:
+  - Vue
   - 博客
   - 项目
 pinned: true

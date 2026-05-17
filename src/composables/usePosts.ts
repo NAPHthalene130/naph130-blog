@@ -20,7 +20,14 @@ export function usePosts() {
   })
 
   const pinnedPosts = computed(() => posts.value.filter((p) => p.pinned))
-  const normalPosts = computed(() => posts.value.filter((p) => !p.pinned))
+
+  const categories = computed(() => {
+    const map = new Map<string, number>()
+    for (const p of posts.value) {
+      if (p.category) map.set(p.category, (map.get(p.category) || 0) + 1)
+    }
+    return Array.from(map.entries()).map(([name, count]) => ({ name, count }))
+  })
 
   async function loadIndex() {
     loading.value = true
@@ -52,9 +59,7 @@ export function usePosts() {
     }
   }
 
-  watch(locale, () => {
-    loadIndex()
-  }, { immediate: true })
+  watch(locale, () => { loadIndex() }, { immediate: true })
 
-  return { index, posts, pinnedPosts, normalPosts, loading, error, loadIndex, loadPost, getAdjacentPosts }
+  return { index, posts, pinnedPosts, categories, loading, error, loadIndex, loadPost, getAdjacentPosts }
 }

@@ -3,6 +3,7 @@ export interface PostMeta {
   title: string
   date: string
   updated?: string
+  category: string
   description: string
   tags: string[]
   pinned: boolean
@@ -21,6 +22,13 @@ export interface TocItem {
   text: string
   level: number
   children: TocItem[]
+}
+
+export interface FriendLink {
+  name: string
+  url: string
+  avatar?: string
+  description?: string
 }
 
 export type ThemeMode = 'light' | 'dark'

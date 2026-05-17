@@ -1,40 +1,89 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useRouter, useRoute } from 'vue-router'
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import ThemeToggle from './ThemeToggle.vue'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 
-const { t, locale } = useI18n()
-const router = useRouter()
+const { t } = useI18n()
 const route = useRoute()
 
 const navItems = [
-  { key: 'intro', label: computed(() => t('nav.intro')) },
-  { key: 'posts', label: computed(() => t('nav.posts')) },
-  { key: 'about', label: computed(() => t('nav.about')) },
+  { name: 'home', label: computed(() => t('nav.home')) },
+  { name: 'posts', label: computed(() => t('nav.posts')) },
+  { name: 'about', label: computed(() => t('nav.about')) },
 ]
 
-const activeNav = computed(() => (route.name as string) || 'intro')
+const activeNav = computed(() => {
+  const name = route.name as string
+  if (name === 'intro') return 'home'
+  if (name === 'post') return 'posts'
+  return name || 'home'
+})
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4">
-    <nav class="glass flex items-center gap-1 px-2 py-2 rounded-full shadow-notch">
+  <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+    <nav class="nav-notch">
       <RouterLink
         v-for="item in navItems"
-        :key="item.key"
-        :to="{ name: item.key }"
-        class="px-5 py-2 rounded-full text-sm font-medium transition-all duration-200"
-        :class="activeNav === item.key
-          ? 'bg-accent-500 text-white shadow-sm'
-          : 'text-base-600 dark:text-base-300 hover:text-base-800 dark:hover:text-base-100'"
+        :key="item.name"
+        :to="{ name: item.name === 'home' ? 'intro' : item.name }"
+        class="nav-link"
+        :class="{ active: activeNav === item.name }"
       >
         {{ item.label.value }}
       </RouterLink>
-      <span class="w-px h-6 bg-base-200 dark:bg-base-700 mx-1" />
+      <span class="nav-sep" />
       <ThemeToggle />
       <LanguageSwitcher />
     </nav>
   </header>
 </template>
+
+<style scoped>
+.nav-notch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: 1px solid var(--glass-border);
+  border-radius: 30px;
+  box-shadow: var(--glass-shadow);
+}
+html.dark .nav-notch {
+  background: rgba(17, 28, 21, 0.55);
+}
+
+.nav-link {
+  padding: 9px 20px;
+  border-radius: 24px;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-link:hover {
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+}
+.nav-link.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.nav-sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(40, 80, 50, 0.12);
+  margin: 0 8px;
+}
+html.dark .nav-sep {
+  background: rgba(100, 160, 120, 0.12);
+}
+</style>

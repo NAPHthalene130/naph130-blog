@@ -1,38 +1,31 @@
 export default {
-  nav: {
-    intro: 'Intro',
-    posts: 'Posts',
-    about: 'About',
+  nav: { home: 'Home', posts: 'Posts', about: 'About' },
+  sidebar: {
+    categories: 'Categories',
+    tags: 'Tags',
+    stats: 'Stats',
+    all: 'All',
+    posts: 'posts',
+    words: 'words',
+    reading: 'read',
   },
   home: {
     greeting: 'Hi, I am',
-    subtitle: 'A passionate developer',
+    subtitle: 'Frontend Developer',
     viewPosts: 'View Posts',
+    pinned: 'Pinned',
+    timeline: 'Recent',
   },
   posts: {
     title: 'Posts',
     search: 'Search posts...',
-    pinned: 'Pinned',
     noResults: 'No posts found',
     readingTime: '{minutes} min read',
     wordCount: '{count} words',
+    totalPosts: '{count} posts',
   },
-  post: {
-    back: 'Back to posts',
-    prev: 'Previous',
-    next: 'Next',
-    toc: 'Contents',
-  },
-  about: {
-    title: 'About',
-  },
-  notFound: {
-    title: '404',
-    message: 'Page not found',
-    backHome: 'Back to home',
-  },
-  theme: {
-    light: 'Light',
-    dark: 'Dark',
-  },
+  post: { back: 'Back to posts', prev: 'Previous', next: 'Next', toc: 'Contents' },
+  about: { title: 'About Me', friends: 'Friend Links' },
+  notFound: { title: '404', message: 'Page not found', backHome: 'Back to home' },
+  theme: { light: 'Light', dark: 'Dark' },
 }

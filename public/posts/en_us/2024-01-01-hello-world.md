@@ -1,8 +1,10 @@
 ---
 title: Hello, World
 date: 2024-01-01
+category: Frontend
 description: This is my very first blog post, documenting the birth of this static blog project.
 tags:
+  - Vue
   - blog
   - project
 pinned: true

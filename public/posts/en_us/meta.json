@@ -1,12 +1,14 @@
 {
-  "generated": "2026-05-17T13:14:32.556Z",
+  "generated": "2026-05-17T15:11:10.101Z",
   "posts": [
     {
       "slug": "2024-01-01-hello-world",
       "title": "Hello, World",
       "date": "2024-01-01",
+      "category": "Frontend",
       "description": "This is my very first blog post, documenting the birth of this static blog project.",
       "tags": [
+        "Vue",
         "blog",
         "project"
       ],
