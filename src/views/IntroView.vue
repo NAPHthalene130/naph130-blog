@@ -56,12 +56,12 @@ const filtered = computed<PostMeta[]>(() => {
         <RouterLink :to="{ name: 'post', params: { slug: pinnedPosts[0].slug } }" class="text-xl font-bold mb-2 hover:underline" style="color: var(--color-text);">
           {{ pinnedPosts[0].title }}
         </RouterLink>
-        <div class="flex gap-1.5 mb-2 flex-wrap">
+        <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ pinnedPosts[0].description }}</p>
+        <div class="text-xs mt-3 mb-3" style="color: var(--color-text-muted);">{{ pinnedPosts[0].date }} · {{ t('posts.readingTime', { minutes: pinnedPosts[0].readingTime }) }}</div>
+        <div class="flex gap-1.5 flex-wrap">
           <span v-if="pinnedPosts[0].category" class="badge-cat">{{ pinnedPosts[0].category }}</span>
           <span v-for="tag in pinnedPosts[0].tags" :key="tag" class="badge-tag">{{ tag }}</span>
         </div>
-        <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ pinnedPosts[0].description }}</p>
-        <div class="text-xs mt-3" style="color: var(--color-text-muted);">{{ pinnedPosts[0].date }} · {{ t('posts.readingTime', { minutes: pinnedPosts[0].readingTime }) }}</div>
       </div>
     </div>
 
@@ -77,7 +77,11 @@ const filtered = computed<PostMeta[]>(() => {
           <div class="text-xs font-medium tracking-wider mb-1.5" style="color: var(--color-text-muted);">{{ post.date }}</div>
           <RouterLink :to="{ name: 'post', params: { slug: post.slug } }" class="block rounded-2xl p-5 transition-all duration-200 hover:translate-x-2" style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">
             <div class="text-base font-semibold mb-1.5" style="color: var(--color-text);">{{ post.title }}</div>
-            <div class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ post.description }}</div>
+            <div class="text-sm leading-relaxed mb-2.5" style="color: var(--color-text-secondary);">{{ post.description }}</div>
+            <div class="flex gap-1.5 flex-wrap">
+              <span v-if="post.category" class="badge-cat">{{ post.category }}</span>
+              <span v-for="tag in post.tags" :key="tag" class="badge-tag">{{ tag }}</span>
+            </div>
           </RouterLink>
         </div>
       </div>
