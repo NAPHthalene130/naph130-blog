@@ -1,4 +1,10 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import RootLayout from '../views/RootLayout.vue'
+import IntroView from '../views/IntroView.vue'
+import PostsView from '../views/PostsView.vue'
+import PostView from '../views/PostView.vue'
+import AboutView from '../views/AboutView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
 
 const LANG_PREFIX = '/:locale(zh_cn|en_us)'
 
@@ -17,19 +23,19 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: LANG_PREFIX,
-    component: () => import('../views/RootLayout.vue'),
+    component: RootLayout,
     children: [
       { path: '', redirect: (to: any) => `${to.path}/intro` },
-      { path: 'intro', name: 'intro', component: () => import('../views/IntroView.vue') },
-      { path: 'posts', name: 'posts', component: () => import('../views/PostsView.vue') },
-      { path: 'post/:slug', name: 'post', component: () => import('../views/PostView.vue') },
-      { path: 'about', name: 'about', component: () => import('../views/AboutView.vue') },
+      { path: 'intro', name: 'intro', component: IntroView },
+      { path: 'posts', name: 'posts', component: PostsView },
+      { path: 'post/:slug', name: 'post', component: PostView },
+      { path: 'about', name: 'about', component: AboutView },
     ],
   },
   {
     path: '/zh_cn/404',
     name: 'notFound',
-    component: () => import('../views/NotFoundView.vue'),
+    component: NotFoundView,
   },
   {
     path: '/:pathMatch(.*)*',
