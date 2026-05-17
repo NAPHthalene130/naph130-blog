@@ -1,0 +1,38 @@
+{
+  "name": "naph130-blog",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{vue,ts,tsx,css,json}\"",
+    "generate-meta": "tsx scripts/generate-meta.ts"
+  },
+  "dependencies": {
+    "fuse.js": "^7.0.0",
+    "highlight.js": "^11.11.0",
+    "markdown-it": "^14.1.0",
+    "vue": "^3.5.13",
+    "vue-i18n": "^10.0.5",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "@vueuse/core": "^12.8.2",
+    "autoprefixer": "^10.4.21",
+    "gray-matter": "^4.0.3",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.3",
+    "typescript": "~5.7.3",
+    "vite": "^6.2.5",
+    "vue-tsc": "^2.2.8"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "composite": true,
+    "skipLibCheck": true
+  },
+  "include": ["vite.config.ts", "tailwind.config.ts", "scripts/**/*.ts"]
+}
