@@ -19,6 +19,7 @@ const { t } = useI18n()
 
 const slug = ref('')
 const rawContent = ref('')
+const bodyContent = ref('')
 const renderedHtml = ref('')
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -38,6 +39,7 @@ async function load() {
     rawContent.value = await loadPost(s)
     const parsed = parseFrontmatter(rawContent.value)
     meta.value = parsed.meta
+    bodyContent.value = parsed.body
     renderedHtml.value = renderMarkdown(parsed.body)
   } catch (e) {
     error.value = (e as Error).message
@@ -143,7 +145,7 @@ const adjacent = computed(() => getAdjacentPosts(slug.value))
               <span v-for="tag in meta.tags" :key="tag" class="badge-tag">{{ tag }}</span>
             </div>
             <img v-if="meta.cover" :src="meta.cover" :alt="meta.title" class="w-full rounded-2xl mb-8 object-cover max-h-96" />
-            <MarkdownRenderer :content="rawContent" />
+            <MarkdownRenderer :content="bodyContent" />
           </div>
           <PostNav :prev="adjacent.prev" :next="adjacent.next" />
         </div>

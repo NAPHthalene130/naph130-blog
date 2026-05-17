@@ -4,6 +4,13 @@ import type { TocItem } from '@/types'
 
 defineProps<{ items: TocItem[]; activeId: string }>()
 const { t } = useI18n()
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
 </script>
 
 <template>
@@ -16,8 +23,9 @@ const { t } = useI18n()
         <template v-for="item in items" :key="item.id">
           <li>
             <a
-              :href="`#${item.id}`"
-              class="block py-1.5 pl-3 border-l-2 -ml-px transition-colors"
+              href="javascript:void(0)"
+              @click.prevent="scrollTo(item.id)"
+              class="block py-1.5 pl-3 border-l-2 -ml-px transition-colors cursor-pointer"
               :class="activeId === item.id
                 ? 'font-medium'
                 : 'border-transparent hover:text-current'"
@@ -30,8 +38,9 @@ const { t } = useI18n()
             <ul v-if="item.children.length > 0" class="ml-2">
               <li v-for="child in item.children" :key="child.id">
                 <a
-                  :href="`#${child.id}`"
-                  class="block py-1.5 pl-3 border-l-2 -ml-px text-xs transition-colors"
+                  href="javascript:void(0)"
+                  @click.prevent="scrollTo(child.id)"
+                  class="block py-1.5 pl-3 border-l-2 -ml-px text-xs transition-colors cursor-pointer"
                   :class="activeId === child.id ? 'font-medium' : ''"
                   :style="activeId === child.id
                     ? `border-color: var(--color-accent); color: var(--color-accent);`
