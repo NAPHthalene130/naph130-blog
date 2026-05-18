@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { usePosts } from '@/composables/usePosts'
 import { useSearch } from '@/composables/useSearch'
 import { useCategoryFilter } from '@/composables/useCategoryFilter'
@@ -9,8 +10,10 @@ import SearchBox from '@/components/SearchBox.vue'
 import type { PostMeta } from '@/types'
 
 const { t } = useI18n()
+const route = useRoute()
 const { posts, loading, error } = usePosts()
 const { activeCategory } = useCategoryFilter()
+const localeParam = computed(() => (route.params.locale as string) || 'zh_cn')
 
 const filtered = computed<PostMeta[]>(() => {
   if (activeCategory.value === 'all') return posts.value
@@ -44,13 +47,13 @@ const { query, results } = useSearch(() => filtered.value)
         style="background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);"
       >
         <RouterLink
-          :to="{ name: 'post', params: { slug: post.slug } }"
+          :to="{ name: 'post', params: { locale: localeParam, slug: post.slug } }"
           class="w-44 shrink-0 flex items-center justify-center text-white/35 text-2xl"
           :style="{ ...getCoverStyle(post.coverImg, post.title), minHeight: '170px' }"
         ></RouterLink>
         <div class="p-6 flex-1 flex flex-col justify-center min-w-0">
           <RouterLink
-            :to="{ name: 'post', params: { slug: post.slug } }"
+            :to="{ name: 'post', params: { locale: localeParam, slug: post.slug } }"
             class="text-lg font-bold mb-1.5 hover:underline"
             style="color: var(--color-text);"
           >{{ post.title }}</RouterLink>

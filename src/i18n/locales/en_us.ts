@@ -9,7 +9,7 @@ export default {
     words: 'words',
     reading: 'read',
     name: 'NAPH130',
-    handle: '@NAPH130',
+    handle: "{'@'}NAPH130",
     location: 'Beijing · Haidian',
     education: 'Beijing JiaoTong Univ., SE',
   },

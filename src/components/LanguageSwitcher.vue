@@ -11,7 +11,7 @@ function switchLang() {
   locale.value = newLocale
   localStorage.setItem('blog-locale', newLocale)
   const routeName = (route.name as string) || 'intro'
-  const params: Record<string, string> = {}
+  const params: Record<string, string> = { locale: newLocale }
   if (route.params.slug) params.slug = route.params.slug as string
   router.push({ name: routeName, params })
 }

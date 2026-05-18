@@ -20,6 +20,8 @@ const activeNav = computed(() => {
   if (name === 'post') return 'posts'
   return name || 'home'
 })
+
+const localeParam = computed(() => (route.params.locale as string) || 'zh_cn')
 </script>
 
 <template>
@@ -28,7 +30,7 @@ const activeNav = computed(() => {
       <RouterLink
         v-for="item in navItems"
         :key="item.name"
-        :to="{ name: item.name === 'home' ? 'intro' : item.name }"
+        :to="{ name: item.name === 'home' ? 'intro' : item.name, params: { locale: localeParam } }"
         class="nav-link"
         :class="{ active: activeNav === item.name }"
       >

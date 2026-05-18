@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import type { PostMeta } from '@/types'
 
 defineProps<{
@@ -7,10 +9,12 @@ defineProps<{
 }>()
 
 const { t } = useI18n()
+const route = useRoute()
+const localeParam = computed(() => (route.params.locale as string) || 'zh_cn')
 </script>
 
 <template>
-  <RouterLink :to="{ name: 'post', params: { slug: post.slug } }" class="glass block p-6 hover:shadow-lg transition-shadow duration-200 group">
+  <RouterLink :to="{ name: 'post', params: { locale: localeParam, slug: post.slug } }" class="glass block p-6 hover:shadow-lg transition-shadow duration-200 group">
     <div class="flex items-start gap-2 mb-3">
       <span v-if="post.pinned" class="text-sm" title="置顶">📌</span>
       <h3 class="text-lg font-semibold text-base-800 dark:text-base-100 group-hover:text-accent-500 dark:group-hover:text-accent-400 transition-colors flex-1">
