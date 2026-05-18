@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { usePosts } from '@/composables/usePosts'
 import { useCategoryFilter } from '@/composables/useCategoryFilter'
 import type { PostMeta } from '@/types'
 
 const { t } = useI18n()
+const route = useRoute()
 const { posts, pinnedPosts } = usePosts()
 const { activeCategory } = useCategoryFilter()
 const BASE = import.meta.env.BASE_URL
 const avatarLoaded = ref(false)
 const avatarSrc = `${BASE}assets/avatar.jpg`
+const localeParam = computed(() => (route.params.locale as string) || 'zh_cn')
 
 const avatarStyle = computed<Record<string, string>>(() => ({
   background: avatarLoaded.value ? 'transparent' : 'linear-gradient(135deg, #2d8a4e, #4caf50)',
@@ -57,7 +60,7 @@ const filtered = computed<PostMeta[]>(() => {
       <div class="w-56 shrink-0 flex items-center justify-center text-white/30 text-4xl" style="background: linear-gradient(135deg, #2d8a4e, #4caf50);">📌</div>
       <div class="p-8 flex flex-col justify-center">
         <div class="text-xs font-bold uppercase tracking-wider mb-1.5" style="color: var(--color-accent);">📌 {{ t('home.pinned') }}</div>
-        <RouterLink :to="{ name: 'post', params: { slug: pinnedPosts[0].slug } }" class="text-xl font-bold mb-2 hover:underline" style="color: var(--color-text);">
+        <RouterLink :to="{ name: 'post', params: { locale: localeParam, slug: pinnedPosts[0].slug } }" class="text-xl font-bold mb-2 hover:underline" style="color: var(--color-text);">
           {{ pinnedPosts[0].title }}
         </RouterLink>
         <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{{ pinnedPosts[0].description }}</p>
@@ -79,7 +82,7 @@ const filtered = computed<PostMeta[]>(() => {
             <div style="width: 6px; height: 6px; background: #fff; border-radius: 2px;"></div>
           </div>
           <div class="text-xs font-medium tracking-wider mb-1.5" style="color: var(--color-text-muted);">{{ post.date }}</div>
-          <RouterLink :to="{ name: 'post', params: { slug: post.slug } }" class="block rounded-2xl p-5 transition-all duration-200 hover:translate-x-2" style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">
+          <RouterLink :to="{ name: 'post', params: { locale: localeParam, slug: post.slug } }" class="block rounded-2xl p-5 transition-all duration-200 hover:translate-x-2" style="background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">
             <div class="text-base font-semibold mb-1.5" style="color: var(--color-text);">{{ post.title }}</div>
             <div class="text-sm leading-relaxed mb-2.5" style="color: var(--color-text-secondary);">{{ post.description }}</div>
             <div class="flex gap-1.5 flex-wrap">

@@ -50,7 +50,7 @@ onMounted(load)
 
     <div v-if="!meta" class="glass-card p-12 text-center">
       <p class="text-red-500 text-lg">文章未找到：{{ route.params.slug }}</p>
-      <RouterLink :to="{ name: 'posts' }" class="inline-block mt-4 text-sm font-medium" style="color: var(--color-accent);">
+      <RouterLink :to="{ name: 'posts', params: { locale: (route.params.locale as string) || 'zh_cn' } }" class="inline-block mt-4 text-sm font-medium" style="color: var(--color-accent);">
         {{ t('post.back') }}
       </RouterLink>
     </div>
