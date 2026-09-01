@@ -1,11 +1,12 @@
 ---
 import { getImage } from 'astro:assets';
 import bgImage from '@/assets/background.jpg';
+import HeaderNav from '@/components/HeaderNav';
+import ParticleHero from '@/components/ParticleHero';
 import { siteConfig } from '@/site.config';
 import '@/styles/global.css';
 
 const optimizedBg = await getImage({ src: bgImage });
-const { enabled, blur, overlayTint } = siteConfig.frostedGlass;
 ---
 
 <!doctype html>
@@ -17,20 +18,13 @@ const { enabled, blur, overlayTint } = siteConfig.frostedGlass;
     <title>{siteConfig.title}</title>
   </head>
   <body
-    class="relative min-h-full w-full bg-cover bg-center bg-no-repeat bg-fixed m-0 p-0 overflow-hidden"
+    class="relative min-h-full w-full bg-cover bg-center bg-no-repeat bg-fixed m-0 p-0 overflow-hidden select-none"
     style={`background-image: url('${optimizedBg.src}')`}
   >
-    {
-      enabled && (
-        <div
-          class:list={[
-            'fixed inset-0 pointer-events-none transition-all duration-300',
-            blur,
-            overlayTint,
-          ]}
-          aria-hidden="true"
-        />
-      )
-    }
+    <!-- 顶部纯透明无底色导航栏 -->
+    <HeaderNav client:load />
+
+    <!-- 首页中心 3D 立方体发散汇聚粒子特效 -->
+    <ParticleHero client:load />
   </body>
 </html>
