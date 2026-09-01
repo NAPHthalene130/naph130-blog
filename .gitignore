@@ -66,3 +66,6 @@ test-results
 ehthumbs.db
 Thumbs.db
 desktop.ini
+
+# Agent / Local Workspace
+.agent/
