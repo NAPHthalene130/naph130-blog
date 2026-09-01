@@ -1,0 +1,36 @@
+---
+import { getImage } from 'astro:assets';
+import bgImage from '@/assets/background.jpg';
+import { siteConfig } from '@/site.config';
+import '@/styles/global.css';
+
+const optimizedBg = await getImage({ src: bgImage });
+const { enabled, blur, overlayTint } = siteConfig.frostedGlass;
+---
+
+<!doctype html>
+<html lang="zh-CN" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{siteConfig.title}</title>
+  </head>
+  <body
+    class="relative min-h-full w-full bg-cover bg-center bg-no-repeat bg-fixed m-0 p-0 overflow-hidden"
+    style={`background-image: url('${optimizedBg.src}')`}
+  >
+    {
+      enabled && (
+        <div
+          class:list={[
+            'fixed inset-0 pointer-events-none transition-all duration-300',
+            blur,
+            overlayTint,
+          ]}
+          aria-hidden="true"
+        />
+      )
+    }
+  </body>
+</html>

@@ -19,6 +19,7 @@ build
 out
 .output
 *.local
+.astro/
 
 # Environment Variables & Secrets
 .env

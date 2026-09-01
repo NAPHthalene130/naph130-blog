@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import bgImage from '@/assets/background.jpg';
+import Header from '@/components/Header.astro';
+import { t } from '@/i18n';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  locale?: string;
+}
+
+const {
+  title = 'naph130 - Blog',
+  description = 'Personal blog focusing on frontend engineering, animations, and architecture.',
+  locale = 'zh_cn',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={locale === 'zh_cn' ? 'zh-CN' : 'en'} class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="relative min-h-screen text-neutral-100 font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+    <!-- 全屏自适应优化背景图 -->
+    <div class="fixed inset-0 -z-30 overflow-hidden select-none pointer-events-none">
+      <Image
+        src={bgImage}
+        alt="Site Background"
+        widths={[640, 1024, 1920, 2560]}
+        sizes="100vw"
+        quality={90}
+        loading="eager"
+        class="w-full h-full object-cover object-center scale-105 transform-gpu"
+      />
+    </div>
+
+    <!-- 柔和遮罩层：保证文字可读性与光影质感 -->
+    <div class="fixed inset-0 -z-20 bg-neutral-950/45 backdrop-blur-[2px]"></div>
+
+    <!-- 顶部导航栏 -->
+    <Header locale={locale} />
+
+    <!-- 页面主体容器 -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+      <slot />
+    </main>
+
+    <!-- 极简页脚 -->
+    <footer class="relative z-10 max-w-5xl mx-auto px-4 py-8 text-center text-xs text-neutral-400 border-t border-white/10 mt-12">
+      <p>© {new Date().getFullYear()} naph130. {t('footer.poweredBy', locale)}</p>
+    </footer>
+  </body>
+</html>
