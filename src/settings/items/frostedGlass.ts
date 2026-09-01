@@ -3,20 +3,16 @@ import type { SettingCategory } from '../types';
 export interface FrostedGlassValues {
   enabled: boolean;
   blur: number;
-  opacity: number;
-  tint: 'white' | 'light' | 'dark';
 }
 
 export const frostedGlassCategory: SettingCategory<FrostedGlassValues> = {
   name: '背景磨砂效果',
   field: 'frostedGlass',
-  description: '调节背景图的模糊度与遮罩质感',
+  description: '调节背景图的模糊虚化程度',
   icon: 'Sliders',
   defaultValues: {
     enabled: true,
-    blur: 12,
-    opacity: 35,
-    tint: 'white',
+    blur: 40, // 默认 40px，磨砂虚化更充分立体
   },
   items: [
     {
@@ -30,51 +26,39 @@ export const frostedGlassCategory: SettingCategory<FrostedGlassValues> = {
       label: '模糊强度',
       type: 'slider',
       min: 0,
-      max: 30,
+      max: 120, // 0 ~ 120px 宽域调节
       step: 1,
       unit: 'px',
-      defaultValue: 12,
-    },
-    {
-      field: 'opacity',
-      label: '遮罩浓度',
-      type: 'slider',
-      min: 0,
-      max: 90,
-      step: 5,
-      unit: '%',
-      defaultValue: 35,
-    },
-    {
-      field: 'tint',
-      label: '色调风格',
-      type: 'select',
-      defaultValue: 'white',
-      options: [
-        { label: '纯白', value: 'white' },
-        { label: '冷白', value: 'light' },
-        { label: '深色', value: 'dark' },
-      ],
+      defaultValue: 40,
     },
   ],
   apply: (values: FrostedGlassValues) => {
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
-    if (!values.enabled) {
-      root.style.setProperty('--glass-blur', '0px');
-      root.style.setProperty('--glass-bg', 'transparent');
-      root.style.setProperty('--glass-opacity', '0');
-    } else {
-      root.style.setProperty('--glass-blur', `${values.blur}px`);
-      root.style.setProperty('--glass-opacity', `${values.opacity / 100}`);
+    const isHome =
+      typeof window !== 'undefined' &&
+      (window.location.pathname === '/' || window.location.pathname === '');
 
-      if (values.tint === 'white') {
-        root.style.setProperty('--glass-bg', `rgba(255, 255, 255, ${values.opacity / 100})`);
-      } else if (values.tint === 'light') {
-        root.style.setProperty('--glass-bg', `rgba(240, 249, 255, ${values.opacity / 100})`);
-      } else {
-        root.style.setProperty('--glass-bg', `rgba(15, 23, 42, ${values.opacity / 100})`);
-      }
+    let blur = '0px';
+    let bg = 'transparent';
+    let opacity = '0';
+
+    if (values.enabled) {
+      blur = `${values.blur}px`;
+      opacity = '1';
+      bg = 'rgba(255, 255, 255, 0.28)'; // 纯净白底半透光晕
+    }
+
+    // 1. 设置持久化参数变量
+    root.style.setProperty('--glass-blur', blur);
+    root.style.setProperty('--glass-bg', bg);
+    root.style.setProperty('--glass-opacity', opacity);
+
+    // 2. 若在非首页，立即同步当前活跃页面的生效变量
+    if (!isHome) {
+      root.style.setProperty('--page-blur', blur);
+      root.style.setProperty('--page-bg', bg);
+      root.style.setProperty('--page-opacity', opacity);
     }
   },
 };

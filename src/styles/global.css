@@ -6,18 +6,25 @@
 
 @layer base {
   :root {
-    --color-bg: #fafafa;
-    --color-text: #171717;
+    --glass-blur: 40px;
+    --glass-opacity: 1;
+    --glass-bg: rgba(255, 255, 255, 0.28);
+    --page-blur: 0px;
+    --page-opacity: 0;
+    --page-bg: transparent;
   }
-
-  .dark {
-    --color-bg: #0a0a0a;
-    --color-text: #ededed;
-  }
-
   body {
-    background-color: var(--color-bg);
-    color: var(--color-text);
+    background-color: transparent;
+    color: #ffffff;
     font-family: 'Comfortaa', 'Outfit', system-ui, -apple-system, sans-serif;
   }
+}
+
+/* 磨砂玻璃持久化层：跨页面平滑过渡 (500ms 自然起雾与消散) */
+.frosted-glass-overlay {
+  transition:
+    backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    -webkit-backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }

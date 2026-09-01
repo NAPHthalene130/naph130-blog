@@ -1,61 +1,133 @@
 ---
-import { Image } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import { getImage } from 'astro:assets';
 import bgImage from '@/assets/background.jpg';
-import Header from '@/components/Header.astro';
-import { t } from '@/i18n';
+import HeaderNav from '@/components/HeaderNav';
+import { siteConfig } from '@/site.config';
 import '@/styles/global.css';
 
 interface Props {
   title?: string;
-  description?: string;
-  locale?: string;
+  currentPath?: string;
 }
 
 const {
-  title = 'naph130 - Blog',
-  description = 'Personal blog focusing on frontend engineering, animations, and architecture.',
-  locale = 'zh_cn',
+  title = siteConfig.title,
+  currentPath = '/',
 } = Astro.props;
+
+const optimizedBg = await getImage({ src: bgImage });
 ---
 
 <!doctype html>
-<html lang={locale === 'zh_cn' ? 'zh-CN' : 'en'} class="dark">
+<html lang="zh-CN" class="h-full">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <ClientRouter />
+
+    <!-- 预先从 localStorage 注入用户自定义磨砂变量及页面初始状态变量 -->
+    <script is:inline>
+      (function () {
+        try {
+          const root = document.documentElement;
+          const isHome = window.location.pathname === '/' || window.location.pathname === '';
+          const saved = localStorage.getItem('naph130_page_settings');
+          
+          let blur = '40px';
+          let bg = 'rgba(255, 255, 255, 0.28)';
+          let opacity = '1';
+
+          if (saved) {
+            const data = JSON.parse(saved);
+            const fg = data.frostedGlass;
+            if (fg) {
+              if (fg.enabled === false) {
+                blur = '0px';
+                bg = 'transparent';
+                opacity = '0';
+              } else {
+                blur = (fg.blur ?? 40) + 'px';
+                opacity = '1';
+                bg = 'rgba(255, 255, 255, 0.28)';
+              }
+            }
+          }
+
+          root.style.setProperty('--glass-blur', blur);
+          root.style.setProperty('--glass-bg', bg);
+          root.style.setProperty('--glass-opacity', opacity);
+
+          // 页面当前动态生效状态变量（跨页面平滑插值）
+          if (isHome) {
+            root.style.setProperty('--page-blur', '0px');
+            root.style.setProperty('--page-bg', 'transparent');
+            root.style.setProperty('--page-opacity', '0');
+          } else {
+            root.style.setProperty('--page-blur', blur);
+            root.style.setProperty('--page-bg', bg);
+            root.style.setProperty('--page-opacity', opacity);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="relative min-h-screen text-neutral-100 font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
-    <!-- 全屏自适应优化背景图 -->
-    <div class="fixed inset-0 -z-30 overflow-hidden select-none pointer-events-none">
-      <Image
-        src={bgImage}
-        alt="Site Background"
-        widths={[640, 1024, 1920, 2560]}
-        sizes="100vw"
-        quality={90}
-        loading="eager"
-        class="w-full h-full object-cover object-center scale-105 transform-gpu"
-      />
-    </div>
+  <body class="relative min-h-full w-full m-0 p-0 overflow-hidden select-none">
+    <!-- 0层：背景壁纸（移除 bg-fixed 以确保浏览器硬件合成器对 backdrop-filter 100% 采样） -->
+    <div
+      transition:persist="site-background"
+      class="fixed inset-0 z-[0] bg-cover bg-center bg-no-repeat pointer-events-none"
+      style={`background-image: url('${optimizedBg.src}')`}
+      aria-hidden="true"
+    />
 
-    <!-- 柔和遮罩层：保证文字可读性与光影质感 -->
-    <div class="fixed inset-0 -z-20 bg-neutral-950/45 backdrop-blur-[2px]"></div>
+    <!-- 1层：常驻持久化磨砂玻璃层（纯 CSS 变量平滑插值，彻底消除 HTML 属性替换跳闪） -->
+    <div
+      transition:persist="site-frosted-overlay"
+      id="frosted-glass-overlay"
+      class="fixed inset-0 z-[1] pointer-events-none frosted-glass-overlay"
+      style={{
+        backdropFilter: 'blur(var(--page-blur, 0px))',
+        WebkitBackdropFilter: 'blur(var(--page-blur, 0px))',
+        backgroundColor: 'var(--page-bg, transparent)',
+        opacity: 'var(--page-opacity, 0)',
+      }}
+      aria-hidden="true"
+    />
 
-    <!-- 顶部导航栏 -->
-    <Header locale={locale} />
+    <!-- 路由生命周期事件调度脚本 -->
+    <script is:inline>
+      function syncPageOverlay() {
+        const path = window.location.pathname.replace(/\/$/, '') || '/';
+        const isHome = path === '/' || path === '';
+        const root = document.documentElement;
 
-    <!-- 页面主体容器 -->
-    <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+        if (isHome) {
+          root.style.setProperty('--page-blur', '0px');
+          root.style.setProperty('--page-bg', 'transparent');
+          root.style.setProperty('--page-opacity', '0');
+        } else {
+          const blur = root.style.getPropertyValue('--glass-blur') || '40px';
+          const bg = root.style.getPropertyValue('--glass-bg') || 'rgba(255, 255, 255, 0.28)';
+          const opacity = root.style.getPropertyValue('--glass-opacity') || '1';
+
+          root.style.setProperty('--page-blur', blur);
+          root.style.setProperty('--page-bg', bg);
+          root.style.setProperty('--page-opacity', opacity);
+        }
+      }
+
+      document.addEventListener('astro:page-load', syncPageOverlay);
+    </script>
+
+    <!-- 50层：顶部导航栏 -->
+    <HeaderNav currentPath={currentPath} client:load />
+
+    <!-- 10层：页面主体容器 -->
+    <main class="relative z-[10] w-full h-full">
       <slot />
     </main>
-
-    <!-- 极简页脚 -->
-    <footer class="relative z-10 max-w-5xl mx-auto px-4 py-8 text-center text-xs text-neutral-400 border-t border-white/10 mt-12">
-      <p>© {new Date().getFullYear()} naph130. {t('footer.poweredBy', locale)}</p>
-    </footer>
   </body>
 </html>

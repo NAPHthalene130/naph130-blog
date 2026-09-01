@@ -1,30 +1,9 @@
 ---
-import { getImage } from 'astro:assets';
-import bgImage from '@/assets/background.jpg';
-import HeaderNav from '@/components/HeaderNav';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 import ParticleHero from '@/components/ParticleHero';
-import { siteConfig } from '@/site.config';
-import '@/styles/global.css';
-
-const optimizedBg = await getImage({ src: bgImage });
 ---
 
-<!doctype html>
-<html lang="zh-CN" class="h-full">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{siteConfig.title}</title>
-  </head>
-  <body
-    class="relative min-h-full w-full bg-cover bg-center bg-no-repeat bg-fixed m-0 p-0 overflow-hidden select-none"
-    style={`background-image: url('${optimizedBg.src}')`}
-  >
-    <!-- 顶部纯透明无底色导航栏 -->
-    <HeaderNav client:load />
-
-    <!-- 首页中心 3D 立方体发散汇聚粒子特效 -->
-    <ParticleHero client:load />
-  </body>
-</html>
+<BaseLayout currentPath="/">
+  <!-- 首页中心粒子文字 -->
+  <ParticleHero client:load />
+</BaseLayout>
