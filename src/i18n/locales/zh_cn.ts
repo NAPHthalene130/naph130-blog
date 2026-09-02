@@ -3,10 +3,10 @@ import type { TranslationSchema } from '../i18nKeys';
 export const zh_cn: TranslationSchema = {
   nav: {
     home: '首页',
+    intro: '简介',
     posts: '文章',
-    categories: '分类',
-    tags: '标签',
-    about: '关于',
+    moments: '动态',
+    friends: '友链',
   },
   common: {
     search: '搜索',

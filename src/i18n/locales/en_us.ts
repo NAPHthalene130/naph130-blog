@@ -3,10 +3,10 @@ import type { TranslationSchema } from '../i18nKeys';
 export const en_us: TranslationSchema = {
   nav: {
     home: 'Home',
+    intro: 'Intro',
     posts: 'Posts',
-    categories: 'Categories',
-    tags: 'Tags',
-    about: 'About',
+    moments: 'Moments',
+    friends: 'Friends',
   },
   common: {
     search: 'Search',

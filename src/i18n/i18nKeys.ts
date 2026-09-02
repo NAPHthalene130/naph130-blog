@@ -5,10 +5,10 @@
 export const I18N_KEYS = {
   // 导航栏 (Navigation)
   NAV_HOME: 'nav.home',
+  NAV_INTRO: 'nav.intro',
   NAV_POSTS: 'nav.posts',
-  NAV_CATEGORIES: 'nav.categories',
-  NAV_TAGS: 'nav.tags',
-  NAV_ABOUT: 'nav.about',
+  NAV_MOMENTS: 'nav.moments',
+  NAV_FRIENDS: 'nav.friends',
 
   // 通用界面 (Common UI)
   COMMON_SEARCH: 'common.search',
@@ -42,10 +42,10 @@ export type I18nKey = (typeof I18N_KEYS)[keyof typeof I18N_KEYS];
 export interface TranslationSchema {
   nav: {
     home: string;
+    intro: string;
     posts: string;
-    categories: string;
-    tags: string;
-    about: string;
+    moments: string;
+    friends: string;
   };
   common: {
     search: string;

@@ -20,6 +20,11 @@
   }
 }
 
+/* 彻底冻结导航栏在 View Transitions 转场中的任何纵向/横向形变动画 */
+::view-transition-group(site-header-nav) {
+  animation: none !important;
+}
+
 /* 磨砂玻璃持久化层：跨页面平滑过渡 (500ms 自然起雾与消散) */
 .frosted-glass-overlay {
   transition:

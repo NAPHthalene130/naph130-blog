@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, RotateCcw, Sliders } from 'lucide-react';
 import { settingCategories, type SettingControlItem } from '@/settings';
 
 interface SettingsModalProps {
@@ -18,6 +17,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onUpdateValue,
   onReset,
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   const renderControl = (
     categoryField: string,
     control: SettingControlItem<unknown>,
@@ -29,77 +43,151 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const isDisabled = control.field !== 'enabled' && !isCategoryEnabled;
 
     switch (control.type) {
-      case 'switch':
+      case 'switch': {
+        const isChecked = Boolean(value);
         return (
-          <div key={control.field} className="flex items-center justify-between py-1">
-            <span className="text-sm font-medium text-neutral-800">{control.label}</span>
+          <div
+            key={control.field}
+            className={`flex items-center justify-between py-2 transition-opacity ${
+              isDisabled ? 'opacity-30' : 'opacity-100'
+            }`}
+          >
+            <div className="flex items-center gap-2.5 pr-3">
+              <span className="text-xs font-mono font-bold text-neutral-900 select-none">□</span>
+              <div>
+                <label className="text-xs font-mono font-bold tracking-wider text-neutral-900 uppercase block">
+                  {control.label}
+                </label>
+                {control.description && (
+                  <p className="text-[11px] font-mono text-neutral-700 mt-0.5 leading-tight">
+                    {control.description}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Anti-Polish Square Raw Switch (半透明适配) */}
             <button
               type="button"
               role="switch"
-              aria-checked={Boolean(value)}
-              onClick={() => onUpdateValue(categoryField, control.field, !value)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none shadow-inner border border-white/50 ${
-                Boolean(value)
-                  ? 'bg-sky-500 shadow-sky-600/30'
-                  : 'bg-white/40 backdrop-blur-md'
+              aria-checked={isChecked}
+              disabled={isDisabled}
+              onClick={() => onUpdateValue(categoryField, control.field, !isChecked)}
+              className={`h-7 px-3 flex items-center justify-center font-mono text-xs border rounded-none transition-all disabled:cursor-not-allowed ${
+                isChecked
+                  ? 'bg-neutral-900 text-white border-neutral-900 font-bold shadow-xs'
+                  : 'bg-white/40 text-neutral-800 border-neutral-600/70 hover:border-neutral-900 hover:text-neutral-950'
               }`}
             >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.15)] transition-transform duration-300 ${
-                  Boolean(value) ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
+              {isChecked ? '[ ON ]' : '[ OFF ]'}
             </button>
           </div>
         );
+      }
 
-      case 'slider':
+      case 'slider': {
+        const numValue = typeof value === 'number' ? value : 0;
+        const min = control.min ?? 0;
+        const max = control.max ?? 100;
+        const step = control.step ?? 1;
+
         return (
-          <div key={control.field} className="space-y-2 py-1">
-            <div className="flex justify-between text-xs font-medium text-neutral-700">
-              <span>{control.label}</span>
-              <span className="text-sky-600 font-semibold drop-shadow-xs">
-                {String(value)} {control.unit ?? ''}
+          <div
+            key={control.field}
+            className={`space-y-2 py-2 transition-opacity ${
+              isDisabled ? 'opacity-30' : 'opacity-100'
+            }`}
+          >
+            <div className="flex items-center justify-between font-mono">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xs font-bold text-neutral-900 select-none">□</span>
+                <span className="text-xs font-bold tracking-wider text-neutral-900 uppercase">
+                  {control.label}
+                </span>
+              </div>
+              <span className="text-xs font-mono font-bold text-neutral-900 px-2 py-0.5 border border-neutral-900/40 bg-white/50 rounded-none shadow-xs">
+                {numValue}
+                {control.unit ?? ''}
               </span>
             </div>
-            <input
-              type="range"
-              min={control.min ?? 0}
-              max={control.max ?? 100}
-              step={control.step ?? 1}
-              disabled={isDisabled}
-              value={Number(value)}
-              onChange={(e) =>
-                onUpdateValue(categoryField, control.field, Number(e.target.value))
-              }
-              className="w-full h-1.5 bg-neutral-300/60 backdrop-blur-sm rounded-lg appearance-none cursor-pointer accent-sky-500 disabled:opacity-30 transition-opacity"
-            />
-          </div>
-        );
 
-      case 'select':
-        return (
-          <div key={control.field} className="space-y-2 py-1">
-            <span className="text-xs font-medium text-neutral-700 block">{control.label}</span>
-            <div className="grid grid-cols-3 gap-2">
-              {control.options?.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  disabled={isDisabled}
-                  onClick={() => onUpdateValue(categoryField, control.field, opt.value)}
-                  className={`py-2 px-2 text-xs font-medium rounded-xl transition-all duration-200 backdrop-blur-md border ${
-                    value === opt.value
-                      ? 'border-sky-400 bg-sky-500/20 text-sky-800 font-semibold shadow-[0_0_12px_rgba(56,189,248,0.25)]'
-                      : 'border-white/60 bg-white/40 text-neutral-700 hover:bg-white/70 hover:border-white/90 shadow-xs'
-                  } disabled:opacity-30`}
-                >
-                  {opt.label}
-                </button>
-              ))}
+            {/* 半透明纯净工坊滑块 */}
+            <div className="relative flex items-center pt-1 pb-0.5">
+              <input
+                type="range"
+                min={min}
+                max={max}
+                step={step}
+                value={numValue}
+                disabled={isDisabled}
+                onChange={(e) =>
+                  onUpdateValue(categoryField, control.field, parseFloat(e.target.value))
+                }
+                className="w-full h-1.5 bg-neutral-900/20 appearance-none cursor-pointer border border-neutral-900/30 rounded-none disabled:cursor-not-allowed
+                  [&::-webkit-slider-thumb]:appearance-none 
+                  [&::-webkit-slider-thumb]:w-3.5 
+                  [&::-webkit-slider-thumb]:h-3.5 
+                  [&::-webkit-slider-thumb]:bg-neutral-900 
+                  [&::-webkit-slider-thumb]:border 
+                  [&::-webkit-slider-thumb]:border-neutral-900 
+                  [&::-webkit-slider-thumb]:rounded-none 
+                  [&::-webkit-slider-thumb]:shadow-xs
+                  [&::-webkit-slider-thumb]:cursor-pointer
+                  [&::-moz-range-thumb]:w-3.5 
+                  [&::-moz-range-thumb]:h-3.5 
+                  [&::-moz-range-thumb]:bg-neutral-900 
+                  [&::-moz-range-thumb]:border-none 
+                  [&::-moz-range-thumb]:rounded-none"
+              />
+            </div>
+            <div className="flex justify-between text-[10px] font-mono font-bold text-neutral-600">
+              <span>{min}{control.unit ?? ''}</span>
+              <span>{max}{control.unit ?? ''}</span>
             </div>
           </div>
         );
+      }
+
+      case 'select': {
+        const strValue = String(value);
+        return (
+          <div
+            key={control.field}
+            className={`space-y-2 py-2 transition-opacity ${
+              isDisabled ? 'opacity-30' : 'opacity-100'
+            }`}
+          >
+            <div className="flex items-center gap-2.5 font-mono">
+              <span className="text-xs font-bold text-neutral-900 select-none">□</span>
+              <span className="text-xs font-bold tracking-wider text-neutral-900 uppercase">
+                {control.label}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {control.options?.map((option) => {
+                const isSelected = strValue === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    disabled={isDisabled}
+                    onClick={() => onUpdateValue(categoryField, control.field, option.value)}
+                    className={`px-3 py-2 font-mono text-xs border text-left flex items-center justify-between transition-colors rounded-none ${
+                      isSelected
+                        ? 'bg-neutral-900 text-white border-neutral-900 font-bold'
+                        : 'bg-white/40 text-neutral-800 border-neutral-400 hover:border-neutral-900 hover:text-neutral-950'
+                    }`}
+                  >
+                    <span>{option.label}</span>
+                    <span className="text-[10px]">{isSelected ? '■' : '□'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
 
       default:
         return null;
@@ -110,75 +198,73 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* 背景轻微遮罩 */}
+          {/* 背景轻微暗场 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/15 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/25 backdrop-blur-xs"
           />
 
-          {/* 凸透镜晶莹面板 */}
+          {/* Anti-Polish 半透明磨砂面板 (bg-white/45 + blur-2xl) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 12 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 360 }}
-            className="relative w-full max-w-md max-h-[85vh] overflow-y-auto rounded-[28px] p-6 sm:p-7 select-none z-10"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className="relative w-[calc(100vw-32px)] sm:w-[400px] max-w-[400px] mx-auto select-none z-10 font-mono shadow-2xl rounded-none border border-neutral-900/80 text-neutral-900"
             style={{
-              backdropFilter: 'blur(20px) brightness(1.1) saturate(140%)',
-              WebkitBackdropFilter: 'blur(20px) brightness(1.1) saturate(140%)',
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(240, 249, 255, 0.55) 100%)',
-              boxShadow: `
-                0 25px 50px -12px rgba(0, 0, 0, 0.2),
-                inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -1.5px 2px 0 rgba(255, 255, 255, 0.4),
-                inset 1.5px 0 1.5px 0 rgba(255, 255, 255, 0.6),
-                inset -1.5px 0 1.5px 0 rgba(255, 255, 255, 0.6)
-              `,
-              border: '1px solid rgba(255, 255, 255, 0.75)',
+              background: 'rgba(255, 255, 255, 0.45)',
+              backdropFilter: 'blur(32px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(32px) saturate(150%)',
+              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.6)',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
             }}
           >
-            {/* 弹窗头部 */}
-            <div className="flex items-center justify-between pb-4 border-b border-neutral-200/50">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-sky-500/10 text-sky-600 border border-sky-500/20 shadow-xs">
-                  <Sliders className="w-4 h-4" />
-                </div>
-                <h3 className="text-base font-bold text-neutral-800 tracking-tight">设置</h3>
+            {/* 顶部标题栏 */}
+            <div className="px-6 py-4 border-b border-neutral-900/15 flex items-center justify-between bg-white/20">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold px-2 py-0.5 bg-neutral-900 text-white rounded-none">
+                  SYS//01
+                </span>
+                <h3 className="text-sm font-bold tracking-widest text-neutral-900 uppercase">
+                  设置
+                </h3>
               </div>
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="关闭"
-                className="p-1.5 rounded-full text-neutral-500 hover:text-neutral-800 hover:bg-black/5 active:scale-95 transition-all"
+                className="px-2.5 py-1 text-xs font-mono border border-neutral-600/60 text-neutral-800 hover:text-neutral-950 hover:border-neutral-900 active:bg-neutral-200/50 transition-colors rounded-none"
               >
-                <X className="w-4 h-4" />
+                [ ✕ ]
               </button>
             </div>
 
-            {/* 设置大类与子项渲染 */}
-            <div className="py-2">
+            {/* 控制项列表 */}
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
               {settingCategories.map((category, catIndex) => {
                 const categoryValues = settings[category.field] ?? category.defaultValues;
                 return (
-                  <section
-                    key={category.field}
-                    className={catIndex > 0 ? 'mt-6 pt-6 border-t border-neutral-200/60' : ''}
-                  >
-                    {/* 大项标题与描述 */}
-                    <div className="mb-3.5">
-                      <h4 className="text-sm font-bold text-neutral-800">{category.name}</h4>
+                  <section key={category.field} className="space-y-3">
+                    {/* 分类标题 */}
+                    <div className="flex items-baseline justify-between pb-1.5 border-b border-neutral-900/15">
+                      <h4 className="text-xs font-bold text-neutral-900 tracking-wider uppercase">
+                        // {String(catIndex + 1).padStart(2, '0')}. {category.name}
+                      </h4>
                       {category.description && (
-                        <p className="text-xs text-neutral-500 mt-0.5">{category.description}</p>
+                        <span className="text-[10px] text-neutral-600 font-mono font-medium">
+                          {category.description}
+                        </span>
                       )}
                     </div>
 
-                    {/* 小项列表与小项分隔线 */}
-                    <div className="space-y-3.5 divide-y divide-neutral-200/50">
-                      {category.items.map((control, itemIndex) => (
-                        <div key={control.field} className={itemIndex > 0 ? 'pt-3.5' : ''}>
+                    {/* 控制列表 */}
+                    <div className="space-y-2">
+                      {category.items.map((control) => (
+                        <div key={control.field}>
                           {renderControl(category.field, control, categoryValues)}
                         </div>
                       ))}
@@ -188,22 +274,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               })}
             </div>
 
-            {/* 底部操作 */}
-            <div className="flex items-center justify-between pt-4 mt-4 border-t border-neutral-200/50">
+            {/* 底部操作栏 */}
+            <div className="px-6 py-4 border-t border-neutral-900/15 flex items-center justify-between bg-white/20">
               <button
                 type="button"
                 onClick={onReset}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-neutral-500 hover:text-neutral-800 hover:bg-black/5 active:scale-95 transition-all"
+                className="px-3 py-1.5 text-xs font-mono border border-neutral-600/60 text-neutral-800 hover:text-neutral-950 hover:border-neutral-900 active:bg-neutral-200/50 transition-colors rounded-none"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>恢复默认</span>
+                [ 恢复默认 ]
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-sky-600 hover:bg-sky-500 active:scale-95 shadow-md shadow-sky-500/20 transition-all"
+                className="px-5 py-1.5 text-xs font-mono font-bold bg-neutral-900 text-white hover:bg-neutral-800 active:bg-black transition-colors rounded-none shadow-xs"
               >
-                完成
+                [ 完成 ]
               </button>
             </div>
           </motion.div>
