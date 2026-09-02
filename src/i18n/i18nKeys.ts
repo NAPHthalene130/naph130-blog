@@ -10,6 +10,23 @@ export const I18N_KEYS = {
   NAV_MOMENTS: 'nav.moments',
   NAV_FRIENDS: 'nav.friends',
 
+  // 侧边栏与统计 (Sidebar & Stats)
+  SIDEBAR_SITE_STATS: 'sidebar.siteStats',
+  SIDEBAR_POSTS: 'sidebar.posts',
+  SIDEBAR_TAGS: 'sidebar.tags',
+  SIDEBAR_MOMENTS: 'sidebar.moments',
+  SIDEBAR_RUNNING: 'sidebar.running',
+  SIDEBAR_DAYS_UNIT: 'sidebar.daysUnit',
+
+  // 页面标题与占位 (Pages)
+  PAGES_POSTS_TITLE: 'pages.postsTitle',
+  PAGES_MOMENTS_TITLE: 'pages.momentsTitle',
+  PAGES_TOTAL_PREFIX: 'pages.totalPrefix',
+  PAGES_POSTS_TOTAL_SUFFIX: 'pages.postsTotalSuffix',
+  PAGES_MOMENTS_TOTAL_SUFFIX: 'pages.momentsTotalSuffix',
+  PAGES_POSTS_EMPTY_TITLE: 'pages.postsEmptyTitle',
+  PAGES_MOMENTS_EMPTY_TITLE: 'pages.momentsEmptyTitle',
+
   // 通用界面 (Common UI)
   COMMON_SEARCH: 'common.search',
   COMMON_THEME_TOGGLE: 'common.themeToggle',
@@ -46,6 +63,23 @@ export interface TranslationSchema {
     posts: string;
     moments: string;
     friends: string;
+  };
+  sidebar: {
+    siteStats: string;
+    posts: string;
+    tags: string;
+    moments: string;
+    running: string;
+    daysUnit: string;
+  };
+  pages: {
+    postsTitle: string;
+    momentsTitle: string;
+    totalPrefix: string;
+    postsTotalSuffix: string;
+    momentsTotalSuffix: string;
+    postsEmptyTitle: string;
+    momentsEmptyTitle: string;
   };
   common: {
     search: string;

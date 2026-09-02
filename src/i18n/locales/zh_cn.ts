@@ -8,6 +8,23 @@ export const zh_cn: TranslationSchema = {
     moments: '动态',
     friends: '友链',
   },
+  sidebar: {
+    siteStats: '站点统计',
+    posts: '文章',
+    tags: '标签',
+    moments: '动态',
+    running: '运行',
+    daysUnit: '天',
+  },
+  pages: {
+    postsTitle: '文章',
+    momentsTitle: '动态',
+    totalPrefix: '共 ',
+    postsTotalSuffix: ' 篇',
+    momentsTotalSuffix: ' 条',
+    postsEmptyTitle: '暂无文章记录',
+    momentsEmptyTitle: '暂无动态记录',
+  },
   common: {
     search: '搜索',
     themeToggle: '切换主题',

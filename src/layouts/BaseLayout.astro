@@ -20,14 +20,14 @@ const optimizedBg = await getImage({ src: bgImage });
 ---
 
 <!doctype html>
-<html lang="zh-CN" class="h-full">
+<html lang="zh-CN" class="h-full overflow-hidden">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     
-    <!-- 预连接与极速预载字体（杜绝无样式文字闪烁 FOUT） -->
+    <!-- 预连接与极速预载字体 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -83,8 +83,8 @@ const optimizedBg = await getImage({ src: bgImage });
       })();
     </script>
   </head>
-  <body class="relative min-h-full w-full m-0 p-0 overflow-hidden select-none">
-    <!-- 0层：背景壁纸 -->
+  <body class="relative h-screen w-full m-0 p-0 overflow-hidden select-none">
+    <!-- 0层：固定背景壁纸 -->
     <div
       transition:persist="site-background"
       class="fixed inset-0 z-[0] bg-cover bg-center bg-no-repeat pointer-events-none"
@@ -92,7 +92,7 @@ const optimizedBg = await getImage({ src: bgImage });
       aria-hidden="true"
     />
 
-    <!-- 1层：常驻持久化磨砂玻璃层（纯 CSS 变量平滑插值） -->
+    <!-- 1层：常驻持久化磨砂玻璃层 -->
     <div
       transition:persist="site-frosted-overlay"
       id="frosted-glass-overlay"
@@ -131,7 +131,7 @@ const optimizedBg = await getImage({ src: bgImage });
       document.addEventListener('astro:page-load', syncPageOverlay);
     </script>
 
-    <!-- 50层：顶部导航栏（启用持久化，彻底免除 View Transitions 路由切换时的整体移动与闪烁） -->
+    <!-- 50层：顶部导航栏 -->
     <div
       transition:persist="site-header-nav"
       class="fixed top-0 left-0 right-0 z-50 pointer-events-auto"
@@ -139,8 +139,8 @@ const optimizedBg = await getImage({ src: bgImage });
       <HeaderNav currentPath={currentPath} client:load />
     </div>
 
-    <!-- 10层：页面主体容器 -->
-    <main class="relative z-[10] w-full h-full pt-20">
+    <!-- 10层：页面主体容器 (严格单屏高度，从顶部 h-20 算起，无溢出) -->
+    <main class="relative z-[10] w-full h-screen pt-20 pb-3 box-border overflow-hidden flex flex-col min-h-0">
       <slot />
     </main>
   </body>

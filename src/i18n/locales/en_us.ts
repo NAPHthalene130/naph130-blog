@@ -8,6 +8,23 @@ export const en_us: TranslationSchema = {
     moments: 'Moments',
     friends: 'Friends',
   },
+  sidebar: {
+    siteStats: 'Site Stats',
+    posts: 'Posts',
+    tags: 'Tags',
+    moments: 'Moments',
+    running: 'Uptime',
+    daysUnit: 'd',
+  },
+  pages: {
+    postsTitle: 'Posts',
+    momentsTitle: 'Moments',
+    totalPrefix: 'Total ',
+    postsTotalSuffix: ' posts',
+    momentsTotalSuffix: ' moments',
+    postsEmptyTitle: 'No posts recorded',
+    momentsEmptyTitle: 'No moments recorded',
+  },
   common: {
     search: 'Search',
     themeToggle: 'Toggle Theme',

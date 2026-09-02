@@ -1,7 +1,42 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogSidebar from '@/components/BlogSidebar';
+import PageHeader from '@/components/PageHeader';
+import MomentsFeed from '@/components/MomentsFeed';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts');
+const postCount = allPosts.length;
+const tags = new Set(allPosts.flatMap((p) => p.data.tags || []));
+const tagCount = tags.size;
 ---
 
 <BaseLayout title="动态 - NAPH130's Blog" currentPath="/moments">
-  <!-- 动态页主体留空 -->
+  <div class="flex-1 w-full min-h-0 flex items-center justify-center p-3 sm:p-5 lg:p-6 overflow-hidden">
+    {/* 严格单屏视口约束容器 */}
+    <div class="w-full max-w-7xl h-full max-h-[calc(100vh-7.5rem)] min-h-0 flex flex-col lg:flex-row gap-5 lg:gap-7 items-stretch overflow-hidden">
+      {/* 左侧栏：三卡片全高舒展排布 */}
+      <div class="w-full lg:w-72 xl:w-80 shrink-0 h-full min-h-0 flex flex-col overflow-hidden">
+        <BlogSidebar
+          postCount={postCount}
+          tagCount={tagCount}
+          momentCount={0}
+          client:load
+        />
+      </div>
+
+      {/* 右侧：等高动态主面板 */}
+      <div class="flex-1 min-w-0 w-full h-full min-h-0 rounded-3xl bg-white/20 backdrop-blur-2xl border border-white/40 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden">
+        {/* 固定顶部标头栏 */}
+        <div class="p-6 sm:p-8 pb-4 shrink-0">
+          <PageHeader type="moments" count={0} client:load />
+        </div>
+
+        {/* 内部区域 */}
+        <div class="flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 pb-8 custom-slidebar pr-3 sm:pr-5 flex items-center justify-center">
+          <MomentsFeed client:load />
+        </div>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
